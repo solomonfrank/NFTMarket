@@ -1,43 +1,8 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\hardhat\\console.sol": {
-      "lastModificationDate": 1653473850767,
-      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
-      "sourceName": "hardhat/console.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.4.22 <0.9.0"
-      ],
-      "artifacts": [
-        "console"
-      ]
-    },
     "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\NFT.sol": {
-      "lastModificationDate": 1653497407940,
+      "lastModificationDate": 1653498393196,
       "contentHash": "2ab8fb39c216fb72b6293df1ff66a6fd",
       "sourceName": "contracts/NFT.sol",
       "solcConfig": {

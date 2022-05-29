@@ -1,13 +1,227 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.header-link .ant-menu-item-selected::after {
+  color: #e2b93b !important;
+  border-bottom: 1px solid #e2b93b !important;
+}
+
+.header-link .ant-menu-item-active::after {
+  border-bottom: 1px solid #e2b93b !important;
+}
+.header-link .ant-menu-item-active {
+  color: #e2b93b !important;
+}
+.header-link .ant-menu-item-selected {
+  color: #e2b93b !important;
+}
+.header-link .ant-menu-item-selected .ant-menu-item-active {
+  border-bottom: 1px solid #e2b93b !important;
+  color: #e2b93b !important;
+}
+
+.sidebar-link {
+  border-right: none !important;
+}
+
+.sidebar-link .ant-menu-item {
+  font-size: 16px;
+  padding: 30px;
+  width: 200px !important;
+  border-radius: 10px !important;
+  margin: auto !important;
+}
+
+.sidebar-link .ant-menu-item-active {
+  color: #e2b93b !important;
+  width: 200px !important;
+  border-radius: 10px !important;
+  margin: auto !important;
+  background-color: #000 !important;
+}
+
+.ant-menu-item a {
+  color: #fff !important;
+}
+
+.sidebar-link .ant-menu-item-selected {
+  color: #e2b93b !important;
+  background: none !important;
+}
+/* .sidebar-link .ant-menu-item-active::after {
+  border-right: none !important;
+} */
+
+.sidebar-link .ant-menu-item::after {
+  border-right: none !important;
+}
+.content-main {
+  padding: 20px;
+  background-color: #373a43;
+  border-radius: 15px;
+  height: 500px;
+  overflow-y: auto;
+}
+.content-header {
+  display: flex;
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+.content-header-title {
+  margin-right: auto;
+  font-weight: 600;
+  color: #fff;
+  font-size: 24px;
+}
+
+.content-header-btn {
+  outline: none;
+
+  background: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  align-self: center;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+.list-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2%;
+}
+
+/* .list-item {
+  display: flex;
+  gap: 10px;
+  color: #fff;
+} */
+.list-item {
+  width: 19%;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  border-radius: 10px;
+  background-color: #232226;
+  margin-bottom: 10px;
+}
+
+.list-item :nth-child(5n + 0) {
+  /* margin-right: 0; */
+}
+.nft-upper-title {
+  color: #fff;
+}
+.nft-upper {
+  display: flex;
+  justify-content: space-between;
+}
+.nft-photo {
+  width: 100%;
+}
+
+.nft-upper:first-child {
+  margin-top: 20px;
+}
+
+.mint-btn-wrap {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mint-btn {
+  background-color: #2c2c34;
+  color: #fff;
+  padding: 10px 20px;
+  outline: none;
+  border-radius: 10px;
+  border: none;
+}
+
+.price-tag,
+.nft-upper-title {
+  font-size: 16px;
+  color: #fff;
+}
+
+.right-header {
+  display: flex;
+  align-self: center;
+  align-items: center;
+  color: #000;
+}
+
+.connect-wallet {
+  border: none;
+  color: #000;
+  border-radius: 10px;
+  background-color: #e2b93b;
+  align-self: center;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 0 20px;
+}
+.wallet-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-wrapper {
+  width: 50%;
+  margin: auto;
+}
+
+.form-input-wrap {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+.form-title {
+  text-align: center;
+  font-size: 25px;
+  color: #e2b93b;
+}
+
+.form-input {
+  padding: 8px;
+  outline: none;
+  background: transparent;
+  border: 1px solid #e2b93b;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 5px;
+}
+.form-input-label {
+  font-size: 16px;
+  color: #e2b93b;
+  font-weight: 500;
+}
+.form-submit {
+  width: 100%;
+  padding: 8px;
+  color: #000;
+  outline: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 500;
+  background-color: #e2b93b;
 }
