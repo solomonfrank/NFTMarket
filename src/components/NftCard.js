@@ -20,8 +20,6 @@ const NFtCard = ({ item, reload }) => {
     );
 
     const price = ethers.utils.parseUnits(nft.price.toString(), "ether"); //  convert to wei
-    const listingPrice = await marketNftContract.getListingPrice();
-
     const transaction = await marketNftContract.createmarketSale(
       nft.tokenId,
       nftAddress,
@@ -31,18 +29,11 @@ const NFtCard = ({ item, reload }) => {
     );
 
     await transaction.wait();
-    console.log({
-      nft,
-      listingPrice: listingPrice.toString(),
-      price: price.toString(),
-      isSame: price.toString() == listingPrice.toString(),
-    });
     reload();
-    // loadNft();
   };
   return (
     <div className="list-item">
-      <img src={item.image} className="nft-photo" />
+      <img src={item.image} className="nft-photo" alt={item.title} />
       <div className="nft-footer">
         <div className="nft-upper">
           <h3 className="nft-upper-title">{item.title}</h3>

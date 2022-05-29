@@ -6,7 +6,6 @@ import { useState } from "react";
 import { IoIosRocket } from "react-icons/io";
 import { GiMining, GiVote } from "react-icons/gi";
 import { FaWallet } from "react-icons/fa";
-
 import {
   TiSocialTwitter,
   TiSocialLinkedin,
@@ -14,15 +13,7 @@ import {
 } from "react-icons/ti";
 import { SiMicrosoftexchange } from "react-icons/si";
 import { BsShieldFill } from "react-icons/bs";
-
-import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
-import NFTMarket from "../artifacts/contracts/NFtMarket.sol/NftMarket.json";
-
 import Web3Modal from "web3modal";
-import { create } from "ipfs-http-client";
-import axios from "axios";
-import { ethers } from "ethers";
-import { nftAddress, marketNftAddress } from "../config";
 
 import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
 import { Link } from "react-router-dom";
@@ -31,65 +22,9 @@ const { Header, Content, Sider } = Layout;
 
 let provider;
 
-const client = create("http://127.0.0.1:5002");
-
 const PageLayout = ({ children }) => {
   const [connected, setConnected] = useState();
-  const [nftItems, setNftItems] = useState([]);
-  const [collapsed, setCollapsed] = useState(false);
-
-  const buyNft = async (nft) => {
-    const web3modal = new Web3Modal();
-    const connection = await web3modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-    const marketNftContract = ethers.Contract(
-      marketNftAddress,
-      NFTMarket.abi,
-      signer
-    );
-
-    const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
-    const transaction = await marketNftContract.createmarketSale(
-      nft.tokenId,
-      nftAddress,
-      { value: price }
-    );
-    await transaction.wait();
-    loadNft();
-  };
-  const loadNft = async () => {
-    const provider = new ethers.providers.JsonRpcProvider();
-    const tokenContract = new ethers.Contract(
-      nftAddress,
-      NFT.abi,
-      provider.getSigner()
-    );
-
-    const marketContract = new ethers.Contract(
-      marketNftAddress,
-      NFTMarket.abi,
-      provider.getSigner()
-    );
-    const items = await marketContract.fetchMarketItem();
-    const nftItems = await Promise.all(
-      items.map(async (item) => {
-        const tokenUrl = await tokenContract.tokenURI(item.tokenId);
-        const meta = await axios.get(tokenUrl);
-        const price = ethers.utils.formatUnits(item.price.toString(), "ether");
-        return {
-          price,
-          owner: item.onwer,
-          seller: item.seller,
-          tokenUrl,
-          tokenId: item.tokenId.toString(),
-          name: meta.data.title,
-          description: meta.data.description,
-        };
-      })
-    );
-    setNftItems(nftItems);
-  };
+  const [collapsed] = useState(false);
 
   const connectWallet = async () => {
     const web3modal = new Web3Modal();
