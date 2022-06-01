@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import NFTMarket from "../artifacts/contracts/NFtMarket.sol/NftMarket.json";
 import Web3Modal from "web3modal";
 import { nftAddress, marketNftAddress } from "../config";
+import { Link } from "react-router-dom";
 
 const NFtCard = ({ item, reload }) => {
   const buyNft = async (nft) => {
@@ -36,7 +37,9 @@ const NFtCard = ({ item, reload }) => {
       <img src={item.image} className="nft-photo" alt={item.title} />
       <div className="nft-footer">
         <div className="nft-upper">
-          <h3 className="nft-upper-title">{item.title}</h3>
+          <h3 className="nft-upper-title">
+            <Link to={`/asset/${item.marketId}`}>{item.title}</Link>
+          </h3>
           <span>
             <AiFillStar color="#e2b93b" />
           </span>
@@ -47,7 +50,7 @@ const NFtCard = ({ item, reload }) => {
         </div>
         <div className="mint-btn-wrap">
           <button onClick={() => buyNft(item)} className="mint-btn">
-            Mint
+            Buy
           </button>
         </div>
       </div>

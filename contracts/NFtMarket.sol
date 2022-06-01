@@ -22,6 +22,7 @@ contract NftMarket is ReentrancyGuard {
         address payable seller;
         uint256 price;
         bool sold;
+        // uint256 autionId;
     }
 
     mapping(uint256 => MarketItem) private idToMarketItem;
@@ -76,6 +77,14 @@ contract NftMarket is ReentrancyGuard {
 
     function getListingPrice() public view returns (uint256) {
         return listingPrice;
+    }
+
+    function getMarketItemDetail(uint256 itemId)
+        public
+        view
+        returns (MarketItem memory)
+    {
+        return idToMarketItem[itemId];
     }
 
     function createmarketSale(uint256 itemId, address nftContract)
@@ -153,5 +162,11 @@ contract NftMarket is ReentrancyGuard {
         }
 
         return items;
+    }
+
+    function approveAuction(address nftContract, address auctionAddress)
+        public
+    {
+        IERC721(nftContract).setApprovalForAll(auctionAddress, true);
     }
 }

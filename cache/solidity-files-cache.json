@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\NFT.sol": {
-      "lastModificationDate": 1653498393196,
-      "contentHash": "2ab8fb39c216fb72b6293df1ff66a6fd",
+      "lastModificationDate": 1654056979588,
+      "contentHash": "8dba264c16e8b359c5b54ec387025e29",
       "sourceName": "contracts/NFT.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -31,7 +31,8 @@
       "imports": [
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
         "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        "@openzeppelin/contracts/utils/Counters.sol"
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "hardhat/console.sol"
       ],
       "versionPragmas": [
         ">=0.7.0 <0.9.0"
@@ -442,8 +443,8 @@
       ]
     },
     "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\NFtMarket.sol": {
-      "lastModificationDate": 1653497509293,
-      "contentHash": "af546978890ba799179afffe56a89ca8",
+      "lastModificationDate": 1654071219821,
+      "contentHash": "9cbae3b58a0d3eb20edcbb9685c6243f",
       "sourceName": "contracts/NFtMarket.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -513,6 +514,81 @@
       ],
       "artifacts": [
         "ReentrancyGuard"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\Auction.sol": {
+      "lastModificationDate": 1654103089106,
+      "contentHash": "e61a8ca7da77420bf249224181ce477d",
+      "sourceName": "contracts/Auction.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        ">=0.7.0 <0.9.0"
+      ],
+      "artifacts": [
+        "Auction"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\hardhat\\console.sol": {
+      "lastModificationDate": 1653473850767,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
       ]
     }
   }

@@ -36,6 +36,7 @@ const MyNFT = () => {
           seller: item.seller,
           tokenUrl,
           sold: item.sold,
+          marketId: item.itemId.toString(),
           tokenId: item.tokenId.toString(),
           title: meta.data.title,
           image: meta.data.image,

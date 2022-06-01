@@ -20,13 +20,20 @@ async function main() {
 
   const marketNftAddress = marketNftContract.address;
 
+  const Auction = await hre.ethers.getContractFactory("Auction");
+  const auctionContract = await Auction.deploy();
+  await auctionContract.deployed();
+
+  const auctionAddress = auctionContract.address;
+
   const NFT = await hre.ethers.getContractFactory("NFT");
-  const nftInstance = await NFT.deploy(marketNftAddress);
+  const nftInstance = await NFT.deploy(marketNftAddress, auctionAddress);
 
   await nftInstance.deployed();
 
   console.log("NFt  deployed to:", nftInstance.address);
   console.log("marketNft  deployed to:", marketNftAddress);
+  console.log("auction   deployed to:", auctionAddress);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

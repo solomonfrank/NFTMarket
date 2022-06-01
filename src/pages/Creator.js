@@ -37,6 +37,7 @@ const CreatorNFT = () => {
           seller: item.seller,
           sold: item.sold,
           tokenUrl,
+          marketId: item.itemId.toString(),
           tokenId: item.tokenId.toString(),
           title: meta.data.title,
           image: meta.data.image,

@@ -225,3 +225,98 @@ code {
   font-weight: 500;
   background-color: #e2b93b;
 }
+
+.containerWrap {
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+}
+.leftBio {
+  width: 35%;
+}
+.rightBid {
+  width: 60%;
+}
+.leftBio_photo {
+  width: 100%;
+}
+.desc-title {
+  font-size: 19px;
+}
+.nft-desc {
+  margin-top: 15px;
+}
+.desc-title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.nft-content {
+  line-height: 1.5;
+  font-size: 16px;
+  text-align: justify;
+}
+.rightBid {
+  color: #fff;
+}
+.rightBid_title {
+  color: #fff;
+  font-size: 23px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.price-sec {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 10px;
+}
+.price-val-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.price-val {
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.btn-section {
+  margin-top: 90px;
+  display: flex;
+  justify-content: space-between;
+}
+.btn-section button {
+  width: 49%;
+  padding: 12px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+}
+.btn-buy {
+  background-color: #e2b93b;
+}
+.btn-offer {
+  background-color: rgb(234, 236, 239);
+}
+.bidder-section {
+  margin-top: 50px;
+}
+.bidder-title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.bidAmountWrap {
+  width: 100%;
+}
+.bidAmount {
+  width: 100%;
+}
