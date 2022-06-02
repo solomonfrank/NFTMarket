@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import axios from "axios";
 import Countdown from "react-countdown";
 import web3Modal from "web3modal";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Table, Tag, Space, List, Card, Modal } from "antd";
 
 import PageLayout from "../layout";
@@ -71,6 +72,15 @@ const NFTDetail = () => {
       provider.getSigner()
     );
 
+    const nftCont = new ethers.Contract(
+      nftAddress,
+      NFT.abi,
+      provider.getSigner()
+    );
+
+    const owner = await nftCont.ownerOf(1);
+    console.log({ owner });
+
     const auctionDetail = await contract.getBidInfo(id);
     const bidders = await contract.fetchBidder(id);
 
@@ -86,12 +96,15 @@ const NFTDetail = () => {
     };
 
     const bidderArr = bidders.map((item) => ({
-      bid: item.bid.toString(),
+      bid: ethers.utils.formatUnits(item.bid.toString(), "ether"),
       bidder: item.bidder,
       marketId: item.marketId.toString(),
       auctionId: item.auctionId.toString(),
+
       action: "purchase",
     }));
+
+    bidderArr.sort((a, b) => Number(b.bid) - Number(a.bid));
     console.log({ res, bidderArr });
     setBidder(bidderArr);
     setAuctionDetail(res);
@@ -115,22 +128,26 @@ const NFTDetail = () => {
     );
 
     await marketNftContract.approveAuction(nftAddress, auctionAddress);
-    await contract.startBid(
+    const response = await contract.startBid(
       nftAddress,
       nft.tokenId,
       bid,
       marketNftAddress,
       nft.marketId
     );
+    console.log({ response: nft.tokenId, mket: nft.marketId });
+    getAuctionInfo(id);
+    //  setReload((prev) => !prev);
   };
 
-  const makeOffer = async (bid) => {
+  const makeOffer = async (amt) => {
     const web3modal = new web3Modal();
     const conn = await web3modal.connect();
     const provider = new ethers.providers.Web3Provider(conn);
     const signer = provider.getSigner();
+    const biddingAmt = new ethers.utils.parseUnits(amt, "ether");
     const contract = new ethers.Contract(auctionAddress, Auction.abi, signer);
-    await contract.bid();
+    await contract.bid(nft.marketId, { value: biddingAmt });
   };
 
   const columns = [
@@ -150,6 +167,15 @@ const NFTDetail = () => {
       key: "action",
     },
   ];
+
+  const endBid = async () => {
+    const web3modal = new web3Modal();
+    const conn = await web3modal.connect();
+    const provider = new ethers.providers.Web3Provider(conn);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(auctionAddress, Auction.abi, signer);
+    await contract.end(nftAddress, nft.tokenId, nft.marketId);
+  };
 
   return (
     <PageLayout>
@@ -180,16 +206,35 @@ const NFTDetail = () => {
               Start Offer
             </button>
           )}
+
+          {auctionDetail && auctionDetail.started && !auctionDetail.ended && (
+            <button
+              onClick={() => endBid()}
+              type="button"
+              className="content-header-btn"
+            >
+              End Offer
+            </button>
+          )}
         </div>
 
         <div className="content-main">
           <div className="containerWrap">
             <div className="leftBio">
-              <img
+              <LazyLoadImage
+                className="leftBio_photo"
+                alt={nft?.title}
+                effect="blur"
+                //  height={image.height}
+                src={nft?.image}
+                // src={image.src} // use normal <img> attributes as props
+                //  width={image.width}
+              />
+              {/* <img
                 src={nft?.image}
                 className="leftBio_photo"
                 alt={nft?.title}
-              />
+              /> */}
               <div className="nft-desc">
                 <h3 className="desc-title">Description</h3>
                 <div className="nft-content">{nft?.description}</div>

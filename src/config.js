@@ -1,6 +1,6 @@
-export const nftAddress = "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570";
-export const marketNftAddress = "0x9d4454B023096f34B160D6B654540c56A1F81688";
-export const auctionAddress = "0x5eb3Bc0a489C5A8288765d2336659EbCA68FCd00";
+export const nftAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+export const marketNftAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const auctionAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 export const nftAddress_rop = "0x31F9f99599b700Cc6545D14a5B464B81976d7C40";
 export const marketNftAddress_rop =

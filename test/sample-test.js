@@ -25,7 +25,8 @@ describe("NFTMarket", function () {
     let listingPrice = await marketInstance.getListingPrice();
     listingPrice = listingPrice.toString();
 
-    const tokenId1 = await nftInstance.createToken("https://mynft.com");
+    const trans = await nftInstance.createToken("https://mynft.com");
+    const tx = await trans.wait();
     const tokenId2 = await nftInstance.createToken("https://mynft.com");
 
     const autionPrice = ethers.utils.parseUnits("0.01", "ether");
@@ -35,6 +36,9 @@ describe("NFTMarket", function () {
     await marketInstance.createMarketItem(nftAddress, autionPrice, 2, {
       value: listingPrice,
     });
+
+    const owners = await nftInstance.ownerOf(1);
+    console.log({ owners });
 
     const [_, buyerAddress, thirdBuyer] = await ethers.getSigners();
 
@@ -58,7 +62,6 @@ describe("NFTMarket", function () {
 
     const nftDetail = await marketInstance.getMarketItemDetail("1");
     const tokenUrl = await nftInstance.tokenURI(nftDetail.tokenId);
-    // const meta = await axios.get(tokenUrl);
     const price = ethers.utils.formatUnits(nftDetail.price.toString(), "ether");
     const nftRes = {
       price,
@@ -69,17 +72,16 @@ describe("NFTMarket", function () {
       tokenId: nftDetail.tokenId.toString(),
     };
 
-    const owners = await nftInstance.ownerOf(nftRes.tokenId);
-    console.log({ owners });
     await marketInstance.approveAuction(nftAddress, autionAddress);
 
-    const response = await auctionInstance.startBid(
+    await auctionInstance.startBid(
       nftAddress,
       nftRes.tokenId,
       0,
       marketNftAddress,
       1
     );
+    await auctionInstance.startBid(nftAddress, 2, 0, marketNftAddress, 2);
 
     const bidAmount = ethers.utils.parseUnits("0.01", "ether");
     const res = await auctionInstance
@@ -90,13 +92,18 @@ describe("NFTMarket", function () {
     await auctionInstance.connect(buyerAddress).bid(1, { value: bidAmounttwo });
 
     const bidAmountthird = ethers.utils.parseUnits("0.09", "ether");
-    await auctionInstance.connect(thirdBuyer).bid(1, { value: bidAmountthird });
+    //  await auctionInstance.connect(thirdBuyer).bid(1, { value: bidAmountthird });
     const bidder = await auctionInstance.fetchBidder(1);
+    const bidder1 = await auctionInstance.fetchBidder(2);
 
+    await auctionInstance.end(nftAddress, 1, 1);
     const auct = await auctionInstance.getBidInfo(1);
 
-    console.log({ bidder, auct });
+    const ownersBid = await nftInstance.ownerOf(1);
+    console.log({ ownersBid });
 
-    // console.log({ nftRes });
+    console.log({ bidder1, bidder, auct });
+
+    // console.log({ nftRes });auct
   });
 });

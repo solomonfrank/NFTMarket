@@ -34,6 +34,7 @@ contract Auction is ReentrancyGuard {
     address payable public seller;
 
     mapping(address => uint256) public bids;
+    mapping(uint256 => uint256[]) public trackMarketAuction;
     mapping(uint256 => Bidinfo) public marketItemInfo;
 
     struct AuctionItem {
@@ -58,13 +59,16 @@ contract Auction is ReentrancyGuard {
         address nftMarket,
         uint256 marketId
     ) external {
-        console.log("seller", msg.sender, seller);
+        Bidinfo memory info = marketItemInfo[marketId];
+        //  console.log(info);
+        console.log("info", marketItemInfo[marketId].started);
 
-        require(!auctionInfo.started, "Bid already started");
+        require(!info.started, "Bid already started");
         seller = payable(msg.sender);
         //  require(msg.sender == seller, "You not the seller");
         auctionId.increment();
         uint256 _auctionId = auctionId.current();
+        console.log(_auctionId, msg.sender, marketId);
         autionItemsId[_auctionId] = AuctionItem(
             _auctionId,
             _startingBid,
@@ -75,7 +79,8 @@ contract Auction is ReentrancyGuard {
         highestBid = _startingBid;
 
         IERC721(_nftContract).transferFrom(nftMarket, address(this), _tokenId);
-        auctionInfo = Bidinfo(
+
+        marketItemInfo[marketId] = Bidinfo(
             block.timestamp + 30 minutes,
             block.timestamp,
             true,
@@ -83,14 +88,15 @@ contract Auction is ReentrancyGuard {
             msg.sender,
             _startingBid
         );
-        marketItemInfo[marketId] = auctionInfo;
+
+        trackMarketAuction[marketId].push(_auctionId);
         emit Started();
     }
 
     function bid(uint256 marketId) external payable {
-        console.log(msg.sender, msg.value);
-        require(auctionInfo.started, "Bid not started");
-        require(block.timestamp < auctionInfo.endAt, "Bid has ended");
+        Bidinfo memory info = marketItemInfo[marketId];
+        require(info.started, "Bid not started");
+        require(block.timestamp < info.endAt, "Bid has ended");
         require(msg.value > highestBid, "value is less than highesBid");
 
         if (addressAuctionId[msg.sender] > 0) {
@@ -106,6 +112,8 @@ contract Auction is ReentrancyGuard {
                 marketId
             );
             addressAuctionId[msg.sender] = id;
+
+            trackMarketAuction[marketId].push(id);
         }
         marketItemInfo[marketId].highestBidder = msg.sender;
         marketItemInfo[marketId].highestBid = msg.value;
@@ -141,13 +149,13 @@ contract Auction is ReentrancyGuard {
         // ended = true;
         marketItemInfo[marketId].ended = true;
 
-        if (highestBidder != address(0)) {
+        if (marketItemInfo[marketId].highestBidder != address(0)) {
             IERC721(_nftContract).safeTransferFrom(
                 address(this),
-                highestBidder,
+                marketItemInfo[marketId].highestBidder,
                 _tokenId
             );
-            payable(seller).transfer(highestBid);
+            payable(seller).transfer(marketItemInfo[marketId].highestBid);
         } else {
             IERC721(_nftContract).safeTransferFrom(
                 address(this),
@@ -155,7 +163,7 @@ contract Auction is ReentrancyGuard {
                 _tokenId
             );
         }
-        emit End(seller, highestBid);
+        emit End(seller, marketItemInfo[marketId].highestBid);
     }
 
     function fetchBidder(uint256 marketId)
@@ -163,14 +171,16 @@ contract Auction is ReentrancyGuard {
         view
         returns (AuctionItem[] memory)
     {
-        uint256 totalAuction = auctionId.current();
         uint256 currentIdx = 0;
-
-        AuctionItem[] memory items = new AuctionItem[](totalAuction);
-        for (uint256 i = 0; i < totalAuction; i++) {
-            AuctionItem storage currentItem = autionItemsId[i + 1];
+        uint256 len = trackMarketAuction[marketId].length;
+        console.log("length", len);
+        AuctionItem[] memory items = new AuctionItem[](len);
+        for (uint256 i = 0; i < len; i++) {
+            uint256 id = trackMarketAuction[marketId][i];
+            AuctionItem storage currentItem = autionItemsId[id];
 
             if (currentItem.marketId == marketId) {
+                console.log("Enter", currentItem.marketId);
                 items[currentIdx] = currentItem;
             }
 
