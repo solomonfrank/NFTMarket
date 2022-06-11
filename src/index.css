@@ -320,3 +320,19 @@ code {
 .bidAmount {
   width: 100%;
 }
+
+.propsConts {
+  display: flex;
+  justify-content: space-between;
+}
+.proposer-title {
+  color: #fff;
+}
+.proposer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.proposerBY {
+  color: #fff;
+}
