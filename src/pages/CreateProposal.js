@@ -1,30 +1,106 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { create } from "ipfs-http-client";
 import web3Modal from "web3modal";
+import { Link } from "react-router-dom";
 import { ethers } from "ethers";
-import { message } from "antd";
+import { Table, Tag } from "antd";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import NFTMarket from "../artifacts/contracts/NFtMarket.sol/NftMarket.json";
-import DAO from "../artifacts/contracts/dao/governance_standard/dao.sol/MyDao.json";
-import { nftAddress, marketNftAddress } from "../config";
+import DAO from "../artifacts/contracts/dao.sol/MyDao.json";
+import { nftAddress, marketNftAddress, daoAddress } from "../config";
 
 import PageLayout from "../layout";
-import { Widget, Table, Form } from "web3uikit";
+import { Widget, Form } from "web3uikit";
 
 const client = create("https://ipfs.infura.io:5001/api/v0");
 // const client = create();
 
 const CreateProposal = () => {
-  const createProposal = () => {
+  const [proposalDescription, setProposalDescription] = useState();
+  const [reloadProposal, setReloadProposal] = useState(false);
+  const [proposals, setProposal] = useState([]);
+  const [proposalCount, setProposalCount] = useState();
+
+  const createProposal = async (data) => {
+    try {
+      const web3modal = new web3Modal();
+      const conn = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(conn);
+
+      const signer = provider.getSigner();
+      let contract = new ethers.Contract(daoAddress, DAO.abi, signer);
+      const tx = await contract.createProposal(data, nftAddress);
+      await tx.wait();
+      setReloadProposal((prev) => !prev);
+      console.log({ tx });
+    } catch (err) {
+      console.log(err.toString());
+    }
+  };
+
+  const submitProposal = async (e) => {
+    e.preventDefault();
+    await createProposal(proposalDescription);
+  };
+
+  const loadProposal = async () => {
     const web3modal = new web3Modal();
-    const conn = web3modal.connect();
+    const conn = await web3modal.connect();
     const provider = new ethers.providers.Web3Provider(conn);
 
     const signer = provider.getSigner();
+    let contract = new ethers.Contract(daoAddress, DAO.abi, signer);
+    const proposal = await contract.fetchProposal();
 
-    const contract = new ethers.Contract();
+    const result = proposal.map((item) => ({
+      id: item.id.toString(),
+      description: item.description,
+      status: item.passed,
+      action: item.id.toString(),
+    }));
+    setProposalCount(result.length);
+    setProposal(result);
+    console.log({ result });
   };
+
+  useEffect(() => {
+    loadProposal();
+  }, [reloadProposal]);
+
+  const columns = [
+    {
+      title: "Id",
+      key: "id",
+      dataIndex: "id",
+    },
+    {
+      title: "Description",
+      key: "description",
+      dataIndex: "description",
+    },
+    {
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
+      render: (item) =>
+        item.status ? (
+          <Tag color="success">Passed</Tag>
+        ) : (
+          <Tag color="error">Not passed</Tag>
+        ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      //     dataIndex: "action",
+      render: (item) => (
+        <Link to={`/proposal/${item.id}`} state={item}>
+          View
+        </Link>
+      ),
+    },
+  ];
 
   return (
     <PageLayout>
@@ -35,7 +111,7 @@ const CreateProposal = () => {
         <div className="content-main">
           <div className="widgets" style={{ display: "flex", gap: "20px" }}>
             <Widget
-              info={52}
+              info={proposalCount}
               title="Proposals created"
               style={{ width: "25%" }}
             >
@@ -61,44 +137,16 @@ const CreateProposal = () => {
             />
           </div>
           <div style={{ marginTop: "30px", width: "80%" }}>
-            <Table
-              columnsConfig="10% 70% 20%"
-              data={[]}
-              header={[
-                <span>Id</span>,
-                <span>Description</span>,
-                <span>Status</span>,
-              ]}
-              maxPages={3}
-              pageSize={5}
-            />
+            <Table columns={columns} dataSource={proposals} />
           </div>
 
           <div style={{ marginTop: "30px", width: "80%" }}>
-            <Form
-              buttonConfig={{
-                text: "Submit Proposal",
-                theme: "secondary",
-                isLoading: false,
-                loadingText: "Submitting Proposal",
-              }}
-              data={[
-                {
-                  key: "description",
-                  name: "description",
-                  type: "textarea",
-                  inputWidth: "100%",
-                  validation: {
-                    required: true,
-                  },
-                  value: "",
-                },
-              ]}
-              onSubmit={(e) => {
-                alert("submitted");
-              }}
-              title="Create a new proposal"
-            />
+            <form onSubmit={submitProposal}>
+              <textarea
+                onChange={(e) => setProposalDescription(e.target.value)}
+              />
+              <button type="submit">Submit</button>
+            </form>
           </div>
         </div>
       </div>

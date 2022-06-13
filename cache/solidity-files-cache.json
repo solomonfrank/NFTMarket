@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\Auction.sol": {
-      "lastModificationDate": 1654187541340,
-      "contentHash": "351c44f175fbbe9775d23648fc69bd3a",
+      "lastModificationDate": 1655047246313,
+      "contentHash": "2c7158c337fc143221412e9e9844caea",
       "sourceName": "contracts/Auction.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -32,6 +32,7 @@
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
         "@openzeppelin/contracts/utils/Counters.sol",
         "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "./NFtMarket.sol",
         "hardhat/console.sol"
       ],
       "versionPragmas": [
@@ -476,8 +477,8 @@
       ]
     },
     "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\NFT.sol": {
-      "lastModificationDate": 1654056979588,
-      "contentHash": "8dba264c16e8b359c5b54ec387025e29",
+      "lastModificationDate": 1654969243388,
+      "contentHash": "40841d2e6fa0ef2b52553c5238705b8b",
       "sourceName": "contracts/NFT.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -505,6 +506,7 @@
       "imports": [
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
         "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
         "@openzeppelin/contracts/utils/Counters.sol",
         "hardhat/console.sol"
       ],
@@ -552,9 +554,84 @@
         "ERC721URIStorage"
       ]
     },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\ERC721Enumerable.sol": {
+      "lastModificationDate": 1653472420880,
+      "contentHash": "88095889e59d16821879a8083f906503",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../ERC721.sol",
+        "./IERC721Enumerable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC721Enumerable"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\IERC721Enumerable.sol": {
+      "lastModificationDate": 1653472420928,
+      "contentHash": "f4dd06783f321aa26179bc2b6e361c29",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Enumerable"
+      ]
+    },
     "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\NFtMarket.sol": {
-      "lastModificationDate": 1654071219821,
-      "contentHash": "9cbae3b58a0d3eb20edcbb9685c6243f",
+      "lastModificationDate": 1655048986354,
+      "contentHash": "3e942df7fa0a72c876a0ffe6ad2413d0",
       "sourceName": "contracts/NFtMarket.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -582,7 +659,9 @@
       "imports": [
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
         "@openzeppelin/contracts/utils/Counters.sol",
-        "@openzeppelin/contracts/security/ReentrancyGuard.sol"
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "hardhat/console.sol",
+        "./Auction.sol"
       ],
       "versionPragmas": [
         ">=0.7.0 <0.9.0"
@@ -591,10 +670,10 @@
         "NftMarket"
       ]
     },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
-      "lastModificationDate": 1653472421096,
-      "contentHash": "8398972af73b4e9e5ff3b31cad86234f",
-      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\token\\ERC1155\\IERC1155Receiver.sol": {
+      "lastModificationDate": 1653472420906,
+      "contentHash": "9f8822b72fe2702979e40160cb6d9636",
+      "sourceName": "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
@@ -619,19 +698,19 @@
         }
       },
       "imports": [
-        "../utils/Context.sol"
+        "../../utils/introspection/IERC165.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "Ownable"
+        "IERC1155Receiver"
       ]
     },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\dao\\Box.sol": {
-      "lastModificationDate": 1654249743736,
-      "contentHash": "3b7881e71119cd9ad3c6113c0049ea60",
-      "sourceName": "contracts/dao/Box.sol",
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\TimelockController.sol": {
+      "lastModificationDate": 1653472421108,
+      "contentHash": "973bd5531bb5ead6f93625277d15e5bd",
+      "sourceName": "@openzeppelin/contracts/governance/TimelockController.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
@@ -656,13 +735,15 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol"
+        "../access/AccessControl.sol",
+        "../token/ERC721/IERC721Receiver.sol",
+        "../token/ERC1155/IERC1155Receiver.sol"
       ],
       "versionPragmas": [
-        ">=0.7.0 <0.9.0"
+        "^0.8.0"
       ],
       "artifacts": [
-        "Box"
+        "TimelockController"
       ]
     },
     "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\access\\AccessControl.sol": {
@@ -740,10 +821,10 @@
         "IAccessControl"
       ]
     },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\ECDSA.sol": {
-      "lastModificationDate": 1653472420853,
-      "contentHash": "482bcc512029ecf51ca4ae85cf4667c7",
-      "sourceName": "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\dao\\governance_standard\\Timelock.sol": {
+      "lastModificationDate": 1654255413489,
+      "contentHash": "a80098279b775da62096a7a2a077a39c",
+      "sourceName": "contracts/dao/governance_standard/Timelock.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
@@ -768,13 +849,13 @@
         }
       },
       "imports": [
-        "../Strings.sol"
+        "@openzeppelin/contracts/governance/TimelockController.sol"
       ],
       "versionPragmas": [
-        "^0.8.0"
+        ">=0.7.0 <0.9.0"
       ],
       "artifacts": [
-        "ECDSA"
+        "Timelock"
       ]
     },
     "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\Governor.sol": {
@@ -824,10 +905,10 @@
         "Governor"
       ]
     },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\token\\ERC1155\\IERC1155Receiver.sol": {
-      "lastModificationDate": 1653472420906,
-      "contentHash": "9f8822b72fe2702979e40160cb6d9636",
-      "sourceName": "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol",
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\ECDSA.sol": {
+      "lastModificationDate": 1653472420853,
+      "contentHash": "482bcc512029ecf51ca4ae85cf4667c7",
+      "sourceName": "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
@@ -852,13 +933,13 @@
         }
       },
       "imports": [
-        "../../utils/introspection/IERC165.sol"
+        "../Strings.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "IERC1155Receiver"
+        "ECDSA"
       ]
     },
     "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\utils\\cryptography\\draft-EIP712.sol": {
@@ -1118,349 +1199,6 @@
         "IGovernorTimelock"
       ]
     },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\TimelockController.sol": {
-      "lastModificationDate": 1653472421108,
-      "contentHash": "973bd5531bb5ead6f93625277d15e5bd",
-      "sourceName": "@openzeppelin/contracts/governance/TimelockController.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../access/AccessControl.sol",
-        "../token/ERC721/IERC721Receiver.sol",
-        "../token/ERC1155/IERC1155Receiver.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "TimelockController"
-      ]
-    },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\dao\\governance_standard\\Timelock.sol": {
-      "lastModificationDate": 1654255413489,
-      "contentHash": "a80098279b775da62096a7a2a077a39c",
-      "sourceName": "contracts/dao/governance_standard/Timelock.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/governance/TimelockController.sol"
-      ],
-      "versionPragmas": [
-        ">=0.7.0 <0.9.0"
-      ],
-      "artifacts": [
-        "Timelock"
-      ]
-    },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\dao\\governance_standard\\GovernorContract.sol": {
-      "lastModificationDate": 1654254541645,
-      "contentHash": "3e428886b57eac8fa89517963a6deeda",
-      "sourceName": "contracts/dao/governance_standard/GovernorContract.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/governance/Governor.sol",
-        "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol",
-        "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol",
-        "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol",
-        "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
-        "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol"
-      ],
-      "versionPragmas": [
-        ">=0.7.0 <0.9.0"
-      ],
-      "artifacts": [
-        "GovernorContract"
-      ]
-    },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\extensions\\GovernorSettings.sol": {
-      "lastModificationDate": 1653472420892,
-      "contentHash": "2c6e87fa9b63c7ef8579eb4ae937d4c2",
-      "sourceName": "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../Governor.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "GovernorSettings"
-      ]
-    },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\extensions\\GovernorCountingSimple.sol": {
-      "lastModificationDate": 1653472420890,
-      "contentHash": "02b1526768c0ab245c630eb5a6b160fc",
-      "sourceName": "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../Governor.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "GovernorCountingSimple"
-      ]
-    },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\extensions\\GovernorVotes.sol": {
-      "lastModificationDate": 1653472420895,
-      "contentHash": "d5ec18eb16b8452e749ee7d3aaa304b1",
-      "sourceName": "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../Governor.sol",
-        "../utils/IVotes.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "GovernorVotes"
-      ]
-    },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\extensions\\GovernorVotesQuorumFraction.sol": {
-      "lastModificationDate": 1653472420896,
-      "contentHash": "b346cb21204465106e3d5ea7b6264ee9",
-      "sourceName": "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./GovernorVotes.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "GovernorVotesQuorumFraction"
-      ]
-    },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\utils\\IVotes.sol": {
-      "lastModificationDate": 1653472421089,
-      "contentHash": "a036d40989f21d08bb990e68d0088fa1",
-      "sourceName": "@openzeppelin/contracts/governance/utils/IVotes.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IVotes"
-      ]
-    },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\ERC20Votes.sol": {
-      "lastModificationDate": 1653472420873,
-      "contentHash": "d750921452f3bf2ab170f55cf4f5dc71",
-      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./draft-ERC20Permit.sol",
-        "../../../utils/math/Math.sol",
-        "../../../governance/utils/IVotes.sol",
-        "../../../utils/math/SafeCast.sol",
-        "../../../utils/cryptography/ECDSA.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ERC20Votes"
-      ]
-    },
     "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\draft-ERC20Permit.sol": {
       "lastModificationDate": 1653472420850,
       "contentHash": "3c98f8ccc741d97ece615ce32d638d4c",
@@ -1500,41 +1238,6 @@
       ],
       "artifacts": [
         "ERC20Permit"
-      ]
-    },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\utils\\math\\Math.sol": {
-      "lastModificationDate": 1653472421093,
-      "contentHash": "339b9793dcbd7b5d55af725ef47de74c",
-      "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 100
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "Math"
       ]
     },
     "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\draft-IERC20Permit.sol": {
@@ -1683,6 +1386,382 @@
         "IERC20Metadata"
       ]
     },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
+      "lastModificationDate": 1653472421096,
+      "contentHash": "8398972af73b4e9e5ff3b31cad86234f",
+      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\dao\\Box.sol": {
+      "lastModificationDate": 1654249743736,
+      "contentHash": "3b7881e71119cd9ad3c6113c0049ea60",
+      "sourceName": "contracts/dao/Box.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        ">=0.7.0 <0.9.0"
+      ],
+      "artifacts": [
+        "Box"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\ERC20Votes.sol": {
+      "lastModificationDate": 1653472420873,
+      "contentHash": "d750921452f3bf2ab170f55cf4f5dc71",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./draft-ERC20Permit.sol",
+        "../../../utils/math/Math.sol",
+        "../../../governance/utils/IVotes.sol",
+        "../../../utils/math/SafeCast.sol",
+        "../../../utils/cryptography/ECDSA.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20Votes"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\utils\\math\\Math.sol": {
+      "lastModificationDate": 1653472421093,
+      "contentHash": "339b9793dcbd7b5d55af725ef47de74c",
+      "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Math"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\utils\\IVotes.sol": {
+      "lastModificationDate": 1653472421089,
+      "contentHash": "a036d40989f21d08bb990e68d0088fa1",
+      "sourceName": "@openzeppelin/contracts/governance/utils/IVotes.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IVotes"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\extensions\\GovernorVotes.sol": {
+      "lastModificationDate": 1653472420895,
+      "contentHash": "d5ec18eb16b8452e749ee7d3aaa304b1",
+      "sourceName": "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../Governor.sol",
+        "../utils/IVotes.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "GovernorVotes"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\extensions\\GovernorVotesQuorumFraction.sol": {
+      "lastModificationDate": 1653472420896,
+      "contentHash": "b346cb21204465106e3d5ea7b6264ee9",
+      "sourceName": "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./GovernorVotes.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "GovernorVotesQuorumFraction"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\dao\\governance_standard\\GovernorContract.sol": {
+      "lastModificationDate": 1654254541645,
+      "contentHash": "3e428886b57eac8fa89517963a6deeda",
+      "sourceName": "contracts/dao/governance_standard/GovernorContract.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/governance/Governor.sol",
+        "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol",
+        "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol",
+        "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol",
+        "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
+        "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol"
+      ],
+      "versionPragmas": [
+        ">=0.7.0 <0.9.0"
+      ],
+      "artifacts": [
+        "GovernorContract"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\extensions\\GovernorSettings.sol": {
+      "lastModificationDate": 1653472420892,
+      "contentHash": "2c6e87fa9b63c7ef8579eb4ae937d4c2",
+      "sourceName": "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../Governor.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "GovernorSettings"
+      ]
+    },
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\node_modules\\@openzeppelin\\contracts\\governance\\extensions\\GovernorCountingSimple.sol": {
+      "lastModificationDate": 1653472420890,
+      "contentHash": "02b1526768c0ab245c630eb5a6b160fc",
+      "sourceName": "@openzeppelin/contracts/governance/extensions/GovernorCountingSimple.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 100
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../Governor.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "GovernorCountingSimple"
+      ]
+    },
     "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\dao\\GovernaceToken.sol": {
       "lastModificationDate": 1654250992140,
       "contentHash": "61af39ae4dea5ebc92d224d81bd7983b",
@@ -1720,10 +1799,10 @@
         "GovernancToken"
       ]
     },
-    "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\dao\\governance_standard\\dao.sol": {
-      "lastModificationDate": 1654790647433,
-      "contentHash": "130b3cf3e412a4e83dea05fcb2d8731d",
-      "sourceName": "contracts/dao/governance_standard/dao.sol",
+    "C:\\Users\\Rock\\NftMarket\\nft-market\\contracts\\dao.sol": {
+      "lastModificationDate": 1655036758673,
+      "contentHash": "1e04a007a600569f46717d29ea027a3a",
+      "sourceName": "contracts/dao.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
@@ -1750,7 +1829,9 @@
       "imports": [
         "@openzeppelin/contracts/utils/Counters.sol",
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "@openzeppelin/contracts/token/ERC721/IERC721.sol"
+        "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+        "hardhat/console.sol",
+        "./NFT.sol"
       ],
       "versionPragmas": [
         ">=0.7.0 <0.9.0"

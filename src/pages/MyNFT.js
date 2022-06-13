@@ -25,6 +25,7 @@ const MyNFT = () => {
     );
 
     const items = await contract.fetchMyNFT();
+    console.log({ items });
     const nftItems = await Promise.all(
       items.map(async (item) => {
         const tokenUrl = await nft.tokenURI(item.tokenId);

@@ -6,12 +6,16 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
+import "hardhat/console.sol";
+import "./Auction.sol";
+
 contract NftMarket is ReentrancyGuard {
     using Counters for Counters.Counter;
     Counters.Counter private _itemId;
     Counters.Counter private _itemsSold;
 
     address payable owner;
+    address auditOwner;
     uint256 private listingPrice = 0.01 ether;
 
     struct MarketItem {
@@ -25,7 +29,7 @@ contract NftMarket is ReentrancyGuard {
         // uint256 autionId;
     }
 
-    mapping(uint256 => MarketItem) private idToMarketItem;
+    mapping(uint256 => MarketItem) public idToMarketItem;
 
     event MarketItemCreated(
         uint256 indexed itemId,
@@ -37,8 +41,9 @@ contract NftMarket is ReentrancyGuard {
         bool sold
     );
 
-    constructor() {
+    constructor(address _auditAddress) {
         owner = payable(msg.sender);
+        auditOwner = _auditAddress;
     }
 
     function createMarketItem(
@@ -120,6 +125,7 @@ contract NftMarket is ReentrancyGuard {
 
     function fetchMyNFT() public view returns (MarketItem[] memory) {
         uint256 totalItemCount = _itemId.current();
+        console.log("sender", msg.sender, totalItemCount);
         uint256 itemCount;
         uint256 currentIdx = 0;
 
@@ -168,5 +174,13 @@ contract NftMarket is ReentrancyGuard {
         public
     {
         IERC721(nftContract).setApprovalForAll(auctionAddress, true);
+    }
+
+    function updateOwner(uint256 marketId, address bidder) external {
+        require(auditOwner == msg.sender, "Not allowed");
+        MarketItem storage m = idToMarketItem[marketId];
+        console.log(m.itemId, marketId);
+        m.onwer = payable(bidder);
+        m.sold = true;
     }
 }

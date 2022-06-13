@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { create } from "ipfs-http-client";
 import web3Modal from "web3modal";
 import { ethers } from "ethers";
@@ -23,6 +23,23 @@ const CreateNFT = () => {
   const [tokenUrl, setTokenUrl] = useState();
   const [nftItems, setNftItems] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
+  const [totalMint, setTotalmint] = useState();
+
+  const fetchTotalMint = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(
+      nftAddress,
+      NFT.abi,
+      provider.getSigner()
+    );
+    const totalSupply = await contract.totalSupply();
+    setTotalmint(totalSupply.toString());
+    console.log({ totalSupply: totalSupply.toString() });
+  };
+
+  useEffect(() => {
+    fetchTotalMint();
+  }, []);
 
   const onChange = async (e) => {
     const file = e.target.files[0];
@@ -104,6 +121,7 @@ const CreateNFT = () => {
     );
 
     await transaction.wait();
+    fetchTotalMint();
     message.success("NFT created successfully");
     setLoading(false);
   };
@@ -113,6 +131,9 @@ const CreateNFT = () => {
       <div>
         <div className="content-header">
           <h3 className="content-header-title">Create Nft</h3>
+          <div style={{ color: "#fff", fontSize: "15px" }}>
+            Minted: {totalMint}
+          </div>
         </div>
 
         <div className="content-main">

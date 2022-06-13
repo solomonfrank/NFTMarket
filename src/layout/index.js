@@ -105,6 +105,12 @@ const PageLayout = ({ children }) => {
           <Menu.Item key="3" style={{ paddingTop: "5px" }}>
             <Link to="/create"> Sell Assets</Link>
           </Menu.Item>
+          <Menu.Item key="3" style={{ paddingTop: "5px" }}>
+            <Link to="/proposal/create"> Create DAO</Link>
+          </Menu.Item>
+          <Menu.Item key="3" style={{ paddingTop: "5px" }}>
+            <Link to="/proposal"> Proposal</Link>
+          </Menu.Item>
         </Menu>
 
         <button className="connect-wallet" onClick={connectWallet}>

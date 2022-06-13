@@ -5,6 +5,7 @@ pragma solidity >=0.7.0 <0.9.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "./NFtMarket.sol";
 
 import "hardhat/console.sol";
 
@@ -139,7 +140,8 @@ contract Auction is ReentrancyGuard {
     function end(
         address _nftContract,
         uint256 _tokenId,
-        uint256 marketId
+        uint256 marketId,
+        address marketNftAddress
     ) external {
         require(!marketItemInfo[marketId].ended, "Not sended");
         require(
@@ -147,8 +149,13 @@ contract Auction is ReentrancyGuard {
             "Bid expired"
         );
         // ended = true;
+        console.log("marketId", marketId);
+        // MarketItem storage m = idToMarketItem[marketId];
         marketItemInfo[marketId].ended = true;
-
+        console.log(
+            "marketItemInfo[marketId].highestBidder",
+            marketItemInfo[marketId].highestBidder
+        );
         if (marketItemInfo[marketId].highestBidder != address(0)) {
             IERC721(_nftContract).safeTransferFrom(
                 address(this),
@@ -156,6 +163,12 @@ contract Auction is ReentrancyGuard {
                 _tokenId
             );
             payable(seller).transfer(marketItemInfo[marketId].highestBid);
+            NftMarket(marketNftAddress).updateOwner(
+                marketId,
+                marketItemInfo[marketId].highestBidder
+            );
+
+            // console.log("mamarhshshrketId", m.itemId);
         } else {
             IERC721(_nftContract).safeTransferFrom(
                 address(this),

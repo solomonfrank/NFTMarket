@@ -2,17 +2,16 @@ const { expect } = require("chai");
 
 describe("NFTMarket", function () {
   it("Should create and execute market sale", async function () {
-    const MarketContract = await ethers.getContractFactory("NftMarket");
-    const marketInstance = await MarketContract.deploy();
-    await marketInstance.deployed();
-    const marketNftAddress = marketInstance.address;
-
     const Auction = await ethers.getContractFactory("Auction");
     const auctionInstance = await Auction.deploy();
     await auctionInstance.deployed();
     const autionAddress = auctionInstance.address;
 
     console.log({ autionAddress });
+    const MarketContract = await ethers.getContractFactory("NftMarket");
+    const marketInstance = await MarketContract.deploy(autionAddress);
+    await marketInstance.deployed();
+    const marketNftAddress = marketInstance.address;
 
     const NFTContract = await ethers.getContractFactory("NFT");
     const nftInstance = await NFTContract.deploy(
@@ -21,6 +20,11 @@ describe("NFTMarket", function () {
     );
     await nftInstance.deployed();
     const nftAddress = nftInstance.address;
+
+    const DaoContract = await ethers.getContractFactory("MyDao");
+    const daoInstance = await DaoContract.deploy();
+    await daoInstance.deployed();
+    const daoAddress = daoInstance.address;
 
     let listingPrice = await marketInstance.getListingPrice();
     listingPrice = listingPrice.toString();
@@ -62,6 +66,7 @@ describe("NFTMarket", function () {
 
     const nftDetail = await marketInstance.getMarketItemDetail("1");
     const tokenUrl = await nftInstance.tokenURI(nftDetail.tokenId);
+
     const price = ethers.utils.formatUnits(nftDetail.price.toString(), "ether");
     const nftRes = {
       price,
@@ -94,16 +99,28 @@ describe("NFTMarket", function () {
     const bidAmountthird = ethers.utils.parseUnits("0.09", "ether");
     //  await auctionInstance.connect(thirdBuyer).bid(1, { value: bidAmountthird });
     const bidder = await auctionInstance.fetchBidder(1);
-    const bidder1 = await auctionInstance.fetchBidder(2);
+    // const bidder1 = await auctionInstance.fetchBidder(2);
 
-    await auctionInstance.end(nftAddress, 1, 1);
+    await auctionInstance.end(nftAddress, 1, 1, marketNftAddress);
     const auct = await auctionInstance.getBidInfo(1);
 
     const ownersBid = await nftInstance.ownerOf(1);
     console.log({ ownersBid });
 
-    console.log({ bidder1, bidder, auct });
+    // await daoInstance
+    //   .connect(buyerAddress)
+    //   .createProposal("Create an nft for the project", nftInstance.address);
 
-    // console.log({ nftRes });auct
+    // await daoInstance
+    //   .connect(buyerAddress)
+    //   .createProposal("Convert an nft for the project", nftInstance.address);
+    // const proposals = await daoInstance.fetchProposal();
+
+    const result = await marketInstance.connect(buyerAddress).fetchMyNFT();
+    console.log({ result });
+    const detail = await marketInstance
+      .connect(buyerAddress)
+      .getMarketItemDetail(1);
+    console.log({ detail });
   });
 });

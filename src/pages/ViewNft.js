@@ -112,7 +112,7 @@ const NFTDetail = () => {
 
   useEffect(() => {
     getAuctionInfo(id);
-  }, [id]);
+  }, [id, reload]);
 
   const startOffer = async (bid) => {
     const web3modal = new web3Modal();
@@ -174,7 +174,15 @@ const NFTDetail = () => {
     const provider = new ethers.providers.Web3Provider(conn);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(auctionAddress, Auction.abi, signer);
-    await contract.end(nftAddress, nft.tokenId, nft.marketId);
+    const txn = await contract.end(
+      nftAddress,
+      nft.tokenId,
+      nft.marketId,
+      marketNftAddress
+    );
+    txn.wait();
+    console.log({ txn });
+    setReload((prev) => !prev);
   };
 
   return (

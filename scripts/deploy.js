@@ -14,26 +14,31 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const MarketNFT = await hre.ethers.getContractFactory("NftMarket");
-  const marketNftContract = await MarketNFT.deploy();
-  await marketNftContract.deployed();
-
-  const marketNftAddress = marketNftContract.address;
 
   const Auction = await hre.ethers.getContractFactory("Auction");
   const auctionContract = await Auction.deploy();
   await auctionContract.deployed();
-
   const auctionAddress = auctionContract.address;
+
+  const MarketNFT = await hre.ethers.getContractFactory("NftMarket");
+  const marketNftContract = await MarketNFT.deploy(auctionAddress);
+  await marketNftContract.deployed();
+
+  const marketNftAddress = marketNftContract.address;
 
   const NFT = await hre.ethers.getContractFactory("NFT");
   const nftInstance = await NFT.deploy(marketNftAddress, auctionAddress);
 
   await nftInstance.deployed();
 
+  const DAO = await hre.ethers.getContractFactory("MyDao");
+  const DAOContract = await DAO.deploy();
+  await DAOContract.deployed();
+
   console.log("NFt  deployed to:", nftInstance.address);
   console.log("marketNft  deployed to:", marketNftAddress);
   console.log("auction   deployed to:", auctionAddress);
+  console.log("DAOContract   deployed to:", DAOContract.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

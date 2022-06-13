@@ -20,7 +20,7 @@ function App() {
         <Route exact path="/user-asset" element={<MyNFT />} />
         <Route exact path="/asset/:id" element={<NFTDetail />} />
         <Route exact path="/proposal/create" element={<CreateProposal />} />
-        <Route exact path="/proposal" element={<Proposal />} />
+        <Route exact path="/proposal/:id" element={<Proposal />} />
       </Routes>
     </Router>
   );
