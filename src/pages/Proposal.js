@@ -1,24 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { create } from "ipfs-http-client";
 import web3Modal from "web3modal";
 import { ethers } from "ethers";
-import { message, Tooltip, Radio, Space, Layout } from "antd";
+import { message, Tooltip, Radio, Space, Layout, Table } from "antd";
+import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 
-import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
-import NFTMarket from "../artifacts/contracts/NFtMarket.sol/NftMarket.json";
 import DAO from "../artifacts/contracts/dao.sol/MyDao.json";
 import { nftAddress, marketNftAddress, daoAddress } from "../config";
 
 import PageLayout from "../layout";
-import { Widget, Table, Form, Blockie, Tag } from "web3uikit";
+import { Widget, Blockie, Tag } from "web3uikit";
 import { useLocation } from "react-router-dom";
-import { Header } from "antd/lib/layout/layout";
 
 const client = create("https://ipfs.infura.io:5001/api/v0");
 // const client = create();
 
 const Proposal = () => {
   const location = useLocation();
+  const [proposal, setproposal] = useState();
+  const [reload, setReload] = useState(false);
+  const [voterStatus, setVoterStatus] = useState([]);
 
   const [votedValue, setVotedValue] = useState(1);
   const voteProposal = async (vote) => {
@@ -30,12 +31,25 @@ const Proposal = () => {
     console.log({ signer });
 
     let contract = new ethers.Contract(daoAddress, DAO.abi, signer);
-    const tx = await contract.voteProposal(location.state.id, vote);
+    const tx = await contract.voteProposal(location.state.id, vote, nftAddress);
     await tx.wait();
+    setReload((prev) => !prev);
     console.log({ tx });
   };
 
-  const countVoteHandler = () => {};
+  const countVoteHandler = async () => {
+    const web3modal = new web3Modal();
+    const conn = await web3modal.connect();
+    const provider = new ethers.providers.Web3Provider(conn);
+
+    const signer = provider.getSigner();
+    console.log({ signer });
+
+    let contract = new ethers.Contract(daoAddress, DAO.abi, signer);
+    const tx = await contract.countVotes(location.state.id);
+    await tx.wait();
+    alert("Vote counted");
+  };
 
   const onChange = (e) => {
     setVotedValue(e.target.value);
@@ -47,27 +61,89 @@ const Proposal = () => {
     voteProposal(votedValue);
   };
 
+  const fetchPropsalDetail = async (id) => {
+    const web3modal = new web3Modal();
+    const conn = await web3modal.connect();
+    const provider = new ethers.providers.Web3Provider(conn);
+
+    const signer = provider.getSigner();
+    console.log({ signer });
+    const blockNumber = await provider.getBlockNumber();
+    console.log({ blockNumber });
+
+    let contract = new ethers.Contract(daoAddress, DAO.abi, signer);
+    const result = await contract.fetchProposalItem(id);
+
+    const voters = result.canVote.map((item, idx) => {
+      console.log({ votey: item.voter });
+      return {
+        address: item.voter,
+        status: item.status,
+        id: idx + 1,
+      };
+    });
+
+    console.log({ result });
+    const response = {
+      voteFor: result.voteUp.toString(),
+      voteAgainst: result.voteDown.toString(),
+      description: result.description,
+      passed: result.passed,
+    };
+    setproposal(response);
+    setVoterStatus(voters);
+  };
+
+  useEffect(() => {
+    fetchPropsalDetail(location.state?.id);
+  }, [location.state?.id, reload]);
+
+  const columns = [
+    {
+      title: "Id",
+      key: "id",
+      dataIndex: "id",
+    },
+    {
+      title: "Address",
+      key: "address",
+      dataIndex: "address",
+    },
+    {
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
+      render: (item) =>
+        item ? (
+          <CheckCircleFilled style={{ color: "green" }} />
+        ) : (
+          <CloseCircleFilled style={{ color: "red" }} />
+        ),
+    },
+  ];
+
   return (
     <PageLayout>
       <div>
         <div className="content-header">
           <h3 className="content-header-title">overview</h3>
 
-          {location.state && !location.state.status && (
+          {proposal && proposal.countConducted && (
             <button onClick={countVoteHandler} className="content-header-btn">
               Count Vote
             </button>
           )}
         </div>
 
-        <div className="content-main">
+        <div className="content-main-dr">
           <div className="mainContainer">
-            <div className="proposer-title">
-              {" "}
-              We should accept crypto as a payment gateway
-            </div>
+            <div className="proposer-title">{proposal?.description}</div>
             <div className="propsConts">
-              <Tag color="red" text="Rejected" fontSize="14px" />
+              <Tag
+                color={proposal && proposal.passed ? "green" : "red"}
+                text={proposal && proposal.passed ? "Passed" : "Rejected"}
+                fontSize="14px"
+              />
               <div className="proposer">
                 <span className="proposerBY">Proposer By</span>
                 <Tooltip content="0x">
@@ -82,20 +158,18 @@ const Proposal = () => {
             style={{ display: "flex", gap: "20px", marginTop: "30px" }}
           >
             <Widget
-              info={52}
+              info={proposal?.voteFor}
               title="Voter For"
               style={{ width: "25%" }}
             ></Widget>
-            <Widget style={{ width: "25%" }} info={422} title="Voter Against" />
+            <Widget
+              style={{ width: "25%" }}
+              info={proposal?.voteAgainst}
+              title="Voter Against"
+            />
           </div>
           <div style={{ marginTop: "30px", width: "80%" }}>
-            <Table
-              columnsConfig="80% 20%"
-              data={[]}
-              header={[<span>Address</span>, <span>Vote</span>]}
-              maxPages={3}
-              pageSize={5}
-            />
+            <Table columns={columns} dataSource={voterStatus} />
           </div>
 
           <Layout style={{ marginTop: "30px", width: "80%", padding: "20px" }}>

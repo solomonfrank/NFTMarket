@@ -13,8 +13,14 @@ contract MyDao {
     using Counters for Counters.Counter;
 
     Counters.Counter private proposalId;
+
     address public owner;
     uint256[] public vaidToken;
+
+    struct VotedAddress {
+        address voter;
+        bool status;
+    }
 
     struct Proposal {
         uint256 id;
@@ -26,9 +32,10 @@ contract MyDao {
         bool exists;
         bool countConducted;
         // mapping(address => bool) voteStatus;
-        address[] canVote;
+        VotedAddress[] canVote;
         bool passed;
     }
+
     mapping(uint256 => Proposal) public proposals;
     mapping(uint256 => mapping(address => bool)) public voteStatus;
     mapping(uint256 => mapping(uint256 => bool)) public votedNftId;
@@ -56,6 +63,10 @@ contract MyDao {
         _;
     }
 
+    constructor() {
+        owner = msg.sender;
+    }
+
     function checkProposalEligibity(address _proposalist, address nftAddress)
         private
         view
@@ -73,21 +84,24 @@ contract MyDao {
         return false;
     }
 
-    function checkVoteEligibilty(uint256 _proposalId, address _voter)
-        private
-        view
-        returns (bool)
-    {
-        Proposal storage proposal = proposals[_proposalId];
-        for (uint256 i = 0; i < proposal.canVote.length; i++) {
-            if (proposal.canVote[i] == _voter) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // function checkVoteEligibilty(uint256 _proposalId, address _voter)
+    //     private
+    //     view
+    //     returns (bool)
+    // {
+    //     Proposal storage proposal = proposals[_proposalId];
+    //     for (uint256 i = 0; i < proposal.canVote.length; i++) {
+    //         if (proposal.canVote[i] == _voter) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
-    function voteEligibity(uint256 voteId) private view returns (bool) {
+    function voteEligibity(uint256 voteId, address nftAddress)
+        private
+        returns (uint256)
+    {
         uint256 balance = NFT(nftAddress).balanceOf(msg.sender);
         uint256 availableVote;
 
@@ -119,7 +133,7 @@ contract MyDao {
         uint256 itemId = proposalId.current();
         Proposal storage newProposal = proposals[itemId];
         newProposal.description = _description;
-        newProposal.deadline = block.number + 100;
+        newProposal.deadline = block.timestamp + 10 minutes;
         newProposal.exists = true;
         newProposal.id = itemId;
 
@@ -144,7 +158,10 @@ contract MyDao {
             "You are not allowed to vote"
         );
 
-        require(block.number < proposals[id].deadline, "Proposal has expired");
+        require(
+            proposals[id].deadline > block.timestamp,
+            "Proposal has expired"
+        );
         Proposal storage p = proposals[id];
 
         if (_vote) {
@@ -152,6 +169,9 @@ contract MyDao {
         } else {
             p.voteDown++;
         }
+
+        p.canVote.push(VotedAddress(msg.sender, _vote));
+
         voteStatus[id][msg.sender] = true;
         emit NewVote(p.voteUp, p.voteDown, _vote, id, msg.sender);
     }
@@ -159,7 +179,7 @@ contract MyDao {
     function countVotes(uint256 id) public {
         Proposal storage p = proposals[id];
         require(msg.sender == owner, "Only owner can count the  vote");
-        require(block.number > p.deadline, "Proposal has not ended");
+        require(block.timestamp > p.deadline, "Proposal has not ended");
         require(!p.countConducted, "Count has already been done");
 
         if (p.voteUp > p.voteDown) {
@@ -186,5 +206,13 @@ contract MyDao {
             currentIdx += 1;
         }
         return items;
+    }
+
+    function fetchProposalItem(uint256 id)
+        public
+        view
+        returns (Proposal memory)
+    {
+        return proposals[id];
     }
 }

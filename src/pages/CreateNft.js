@@ -136,7 +136,7 @@ const CreateNFT = () => {
           </div>
         </div>
 
-        <div className="content-main">
+        <div className="content-main-dr">
           <div className="form-wrapper">
             <h3 className="form-title">Setup NFT</h3>
             <form onSubmit={createItem}>

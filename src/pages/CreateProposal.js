@@ -3,7 +3,7 @@ import { create } from "ipfs-http-client";
 import web3Modal from "web3modal";
 import { Link } from "react-router-dom";
 import { ethers } from "ethers";
-import { Table, Tag } from "antd";
+import { Layout, Table, Tag } from "antd";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import NFTMarket from "../artifacts/contracts/NFtMarket.sol/NftMarket.json";
@@ -12,6 +12,7 @@ import { nftAddress, marketNftAddress, daoAddress } from "../config";
 
 import PageLayout from "../layout";
 import { Widget, Form } from "web3uikit";
+import { Header } from "antd/lib/layout/layout";
 
 const client = create("https://ipfs.infura.io:5001/api/v0");
 // const client = create();
@@ -108,46 +109,63 @@ const CreateProposal = () => {
         <div className="content-header">
           <h3 className="content-header-title">Governance overview</h3>
         </div>
-        <div className="content-main">
-          <div className="widgets" style={{ display: "flex", gap: "20px" }}>
-            <Widget
-              info={proposalCount}
-              title="Proposals created"
-              style={{ width: "25%" }}
-            >
-              <div className="extraWidgetInfo">
-                <div className="extraTitle">Pass Rate</div>
-                <div className="progress">
-                  <div
-                    className="progressPercentage"
-                    style={{ width: `${60}%` }}
-                  ></div>
-                </div>
+        <div
+          className="widgets"
+          style={{ display: "flex", gap: "20px", marginBottom: "15px" }}
+        >
+          <Widget
+            info={proposalCount}
+            title="Proposals created"
+            style={{ width: "25%" }}
+          >
+            <div className="extraWidgetInfo">
+              <div className="extraTitle">Pass Rate</div>
+              <div className="progress">
+                <div
+                  className="progressPercentage"
+                  style={{ width: `${60}%` }}
+                ></div>
               </div>
-            </Widget>
-            <Widget
-              style={{ width: "25%" }}
-              info={422}
-              title="Eligible voters"
-            />
-            <Widget
-              style={{ width: "25%" }}
-              info={4}
-              title="Ongoing Proposal"
-            />
-          </div>
+            </div>
+          </Widget>
+          <Widget style={{ width: "25%" }} info={422} title="Eligible voters" />
+          <Widget style={{ width: "25%" }} info={4} title="Ongoing Proposal" />
+        </div>
+        <div className="content-main-crete">
           <div style={{ marginTop: "30px", width: "80%" }}>
             <Table columns={columns} dataSource={proposals} />
           </div>
 
-          <div style={{ marginTop: "30px", width: "80%" }}>
+          <Layout style={{ marginTop: "30px", width: "80%" }}>
+            <h4 className="create-proposal-header">Create Proposal</h4>
             <form onSubmit={submitProposal}>
-              <textarea
-                onChange={(e) => setProposalDescription(e.target.value)}
-              />
-              <button type="submit">Submit</button>
+              <div className="proposal-wrap">
+                <textarea
+                  className="proposal-text"
+                  rows={6}
+                  onChange={(e) => setProposalDescription(e.target.value)}
+                />
+                <button className="proposal-btn" type="submit">
+                  Submit
+                </button>
+              </div>
             </form>
-          </div>
+          </Layout>
+          <Layout style={{ marginTop: "30px", width: "80%" }}>
+            <h4 className="create-proposal-header">Create Proposal</h4>
+            <form onSubmit={submitProposal}>
+              <div className="proposal-wrap">
+                <textarea
+                  className="proposal-text"
+                  rows={6}
+                  onChange={(e) => setProposalDescription(e.target.value)}
+                />
+                <button className="proposal-btn" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </Layout>
         </div>
       </div>
     </PageLayout>

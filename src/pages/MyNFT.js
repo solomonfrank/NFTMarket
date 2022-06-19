@@ -62,7 +62,7 @@ const MyNFT = () => {
           </Link>
         </div>
 
-        <div className="content-main">
+        <div className="content-main-d">
           {nftItems.length ? (
             <div className="list-wrapper">
               {nftItems.map((item) => (

@@ -44,8 +44,8 @@ describe("NFTMarket", function () {
     const owners = await nftInstance.ownerOf(1);
     console.log({ owners });
 
-    const [_, buyerAddress, thirdBuyer] = await ethers.getSigners();
-
+    const [first, buyerAddress, thirdBuyer] = await ethers.getSigners();
+    console.log({ first });
     // marketInstance
     //   .connect(buyerAddress)
     //   .createmarketSale(1, nftAddress, { value: autionPrice });

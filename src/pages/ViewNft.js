@@ -5,7 +5,7 @@ import axios from "axios";
 import Countdown from "react-countdown";
 import web3Modal from "web3modal";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Table, Tag, Space, List, Card, Modal } from "antd";
+import { Table, Tag, Space, List, Card, Modal, message } from "antd";
 
 import PageLayout from "../layout";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
@@ -21,6 +21,7 @@ const NFTDetail = () => {
   const [openModal, setOpenModal] = useState(false);
   const [auctionDetail, setAuctionDetail] = useState();
   const [bidders, setBidder] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const loadNFT = async (id) => {
     const web3modal = new web3Modal();
@@ -127,7 +128,11 @@ const NFTDetail = () => {
       signer
     );
 
-    await marketNftContract.approveAuction(nftAddress, auctionAddress);
+    const tx = await marketNftContract.approveAuction(
+      nftAddress,
+      auctionAddress
+    );
+    await tx.wait();
     const response = await contract.startBid(
       nftAddress,
       nft.tokenId,
@@ -135,19 +140,25 @@ const NFTDetail = () => {
       marketNftAddress,
       nft.marketId
     );
+    await response.wait();
     console.log({ response: nft.tokenId, mket: nft.marketId });
     getAuctionInfo(id);
     //  setReload((prev) => !prev);
   };
 
   const makeOffer = async (amt) => {
+    setLoading(true);
     const web3modal = new web3Modal();
     const conn = await web3modal.connect();
     const provider = new ethers.providers.Web3Provider(conn);
     const signer = provider.getSigner();
     const biddingAmt = new ethers.utils.parseUnits(amt, "ether");
     const contract = new ethers.Contract(auctionAddress, Auction.abi, signer);
-    await contract.bid(nft.marketId, { value: biddingAmt });
+    const tx = await contract.bid(nft.marketId, { value: biddingAmt });
+    await tx.wait();
+    setLoading(false);
+    setOpenModal(false);
+    message.success("Bid successfully");
   };
 
   const columns = [
@@ -193,6 +204,7 @@ const NFTDetail = () => {
         visible={openModal}
         onOk={() => makeOffer(bid)}
         onCancel={() => setOpenModal(false)}
+        okText={loading ? "Bidding" : "Bid"}
       >
         <div className="bidAmountWrap">
           <input

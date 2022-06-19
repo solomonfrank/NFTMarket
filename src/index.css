@@ -12,6 +12,35 @@ code {
     monospace;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  overflow-x: hidden !important;
+  scroll-behavior: smooth;
+}
+
+#root {
+  position: relative;
+}
+
+body {
+  min-height: 100vh !important;
+}
+
+.header-link {
+  width: 60%;
+}
+
 .header-link .ant-menu-item-selected::after {
   color: #e2b93b !important;
   border-bottom: 1px solid #e2b93b !important;
@@ -66,13 +95,11 @@ code {
 .sidebar-link .ant-menu-item::after {
   border-right: none !important;
 }
-.content-main {
+/* .content-main {
   padding: 20px;
   background-color: #373a43;
   border-radius: 15px;
-  height: 500px;
-  overflow-y: auto;
-}
+} */
 .content-header {
   display: flex;
   margin-top: 15px;
@@ -302,6 +329,15 @@ code {
 .btn-buy {
   background-color: #e2b93b;
 }
+
+.proposal-btn {
+  background-color: #e2b93b;
+  color: #fff;
+  width: 100%;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+}
 .btn-offer {
   background-color: rgb(234, 236, 239);
 }
@@ -335,4 +371,19 @@ code {
 }
 .proposerBY {
   color: #fff;
+}
+
+.create-proposal-header {
+  text-align: center;
+  padding: 10px;
+}
+
+.proposal-wrap {
+  margin: 20px auto;
+  width: 80%;
+}
+.proposal-text {
+  width: 100%;
+  resize: none;
+  outline: none;
 }

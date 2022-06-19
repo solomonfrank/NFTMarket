@@ -1,7 +1,7 @@
-export const nftAddress = "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44";
-export const marketNftAddress = "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1";
-export const auctionAddress = "0x59b670e9fA9D0A427751Af201D676719a970857b";
-export const daoAddress = "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f";
+export const nftAddress = "0x36b58F5C1969B7b6591D752ea6F5486D069010AB";
+export const marketNftAddress = "0x51A1ceB83B83F1985a81C295d1fF28Afef186E02";
+export const auctionAddress = "0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD";
+export const daoAddress = "0x8198f5d8F8CfFE8f9C413d98a0A55aEB8ab9FbB7";
 
 export const VOTING_DELAY = 1;
 export const VOTING_PERIOD = 45818;

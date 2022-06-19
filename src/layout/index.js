@@ -45,21 +45,22 @@ const PageLayout = ({ children }) => {
 
   const items = [
     getItem("Nft Art", "1", <BsShieldFill />),
-    getItem("Mining", "2", <GiMining />),
-    getItem("Exchange", "3", <SiMicrosoftexchange />),
-    getItem("DAO", "4", <GiVote />),
+    // getItem("Mining", "2", <GiMining />),
+    getItem("Exchange", "2", <SiMicrosoftexchange />),
+    getItem("DAO", "3", <GiVote />),
   ];
 
   return (
-    <Layout>
+    <Layout style={{ height: "100%" }}>
       <Header
         className="header"
         style={{
           backgroundColor: "#24272E",
           display: "flex",
           // alignItems: "center",
-          height: "10vh",
+
           paddingLeft: "24px",
+          paddngRight: "20px",
           boxShadow: "rgb(0 0 0 / 20%) 0px 3px 7px -1px",
           borderBottom: "1px solid rgba(255,255,255,0.2)",
         }}
@@ -73,16 +74,21 @@ const PageLayout = ({ children }) => {
             width: "220px",
           }}
         >
-          <span
-            style={{
-              display: "flex",
-              alignContent: "center",
-              justifyContent: "center",
-            }}
+          <Link
+            to="/"
+            style={{ display: "flex", alignItems: "center", gap: "10px" }}
           >
-            <IoIosRocket color="#E2B93B" size={30} />
-          </span>
-          <span style={{ color: "#fff", fontSize: "25px" }}>NFT Pro</span>
+            <span
+              style={{
+                display: "flex",
+                alignContent: "center",
+                justifyContent: "center",
+              }}
+            >
+              <IoIosRocket color="#E2B93B" size={30} />
+            </span>
+            <span style={{ color: "#fff", fontSize: "25px" }}>NFT Dash</span>
+          </Link>
         </div>
 
         <Menu
@@ -102,14 +108,12 @@ const PageLayout = ({ children }) => {
           <Menu.Item key="2" style={{ paddingTop: "5px" }}>
             <Link to="/user-asset">My Assets</Link>
           </Menu.Item>
+
           <Menu.Item key="3" style={{ paddingTop: "5px" }}>
             <Link to="/create"> Sell Assets</Link>
           </Menu.Item>
-          <Menu.Item key="3" style={{ paddingTop: "5px" }}>
+          <Menu.Item key="4" style={{ paddingTop: "5px" }}>
             <Link to="/proposal/create"> Create DAO</Link>
-          </Menu.Item>
-          <Menu.Item key="3" style={{ paddingTop: "5px" }}>
-            <Link to="/proposal"> Proposal</Link>
           </Menu.Item>
         </Menu>
 
@@ -124,7 +128,7 @@ const PageLayout = ({ children }) => {
           )}
         </button>
       </Header>
-      <Layout style={{ height: "90vh" }}>
+      <Layout style={{ minHeight: "100vh" }}>
         <Sider
           width={220}
           trigger={null}
@@ -168,23 +172,16 @@ const PageLayout = ({ children }) => {
             </div>
           </div>
         </Sider>
-        <Layout
+        <Content
+          className="site-layout-background"
           style={{
-            padding: "0 24px 24px",
-            backgroundColor: "#2C2C34",
-            height: "90vh",
+            padding: 24,
+            margin: 0,
+            backgroundColor: "#2c2c34",
           }}
         >
-          <Content
-            className="site-layout-background"
-            style={{
-              padding: 24,
-              margin: 0,
-            }}
-          >
-            {children}
-          </Content>
-        </Layout>
+          {children}
+        </Content>
       </Layout>
     </Layout>
   );
