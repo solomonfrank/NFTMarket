@@ -18,6 +18,7 @@ contract NftMarket is ReentrancyGuard {
     address auditOwner;
     uint256 private listingPrice = 0.01 ether;
 
+    // item to  create model
     struct MarketItem {
         uint256 itemId;
         address nftContract;
@@ -26,9 +27,9 @@ contract NftMarket is ReentrancyGuard {
         address payable seller;
         uint256 price;
         bool sold;
-        // uint256 autionId;
     }
 
+    // mapping createdId   to  martketItem
     mapping(uint256 => MarketItem) public idToMarketItem;
 
     event MarketItemCreated(
@@ -53,7 +54,7 @@ contract NftMarket is ReentrancyGuard {
     ) public payable nonReentrant {
         require(_price > 0, "Price must be greater than zero");
         require(
-            msg.value == listingPrice,
+            msg.value >= listingPrice,
             "Amount must be equal to the listing rice"
         );
         _itemId.increment();
@@ -68,6 +69,7 @@ contract NftMarket is ReentrancyGuard {
             _price,
             false
         );
+        // transfer ownership to the market place contract
         IERC721(nftAddress).transferFrom(msg.sender, address(this), _tokenId);
         emit MarketItemCreated(
             itemId,
@@ -97,15 +99,15 @@ contract NftMarket is ReentrancyGuard {
         payable
         nonReentrant
     {
-        uint256 price = idToMarketItem[itemId].price;
+        uint256 price = idToMarketItem[itemId].price; //get market item price
         uint256 tokenId = idToMarketItem[itemId].tokenId;
         require(msg.value == price, "Amount is less than the asking price");
-        idToMarketItem[itemId].seller.transfer(msg.value);
-        IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+        idToMarketItem[itemId].seller.transfer(msg.value); // transfer the sale amount to the seller
+        IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId); // transfer nft ownership to from the market place contract to the buyer
         idToMarketItem[itemId].onwer = payable(msg.sender);
         idToMarketItem[itemId].sold = true;
-        _itemsSold.increment();
-        payable(owner).transfer(listingPrice);
+        _itemsSold.increment(); // increment sold  count
+        payable(owner).transfer(listingPrice); // Transfer listing price to the market place owner
     }
 
     function fetchMarketItem() public view returns (MarketItem[] memory) {

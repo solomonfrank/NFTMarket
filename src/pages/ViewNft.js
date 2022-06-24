@@ -20,6 +20,7 @@ const NFTDetail = () => {
   const [reload, setReload] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [auctionDetail, setAuctionDetail] = useState();
+  const [isCreator, setIsCreator] = useState(false);
   const [bidders, setBidder] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -34,6 +35,8 @@ const NFTDetail = () => {
       provider.getSigner()
     );
 
+    const account = await provider.getSigner().getAddress();
+
     const auctionContract = new ethers.Contract(
       auctionAddress,
       Auction.abi,
@@ -43,7 +46,7 @@ const NFTDetail = () => {
     const nftDetail = await contract.getMarketItemDetail(Number(id));
     const tokenUrl = await nft.tokenURI(nftDetail.tokenId);
     const meta = await axios.get(tokenUrl);
-    const price = ethers.utils.formatUnits(nftDetail.price.toString(), "ether");
+    const price = ethers.utils.formatUnits(nftDetail.price.toString(), "ether"); // format the ether from the smart contract
     const nftRes = {
       price,
       owner: nftDetail.onwer,
@@ -57,6 +60,7 @@ const NFTDetail = () => {
       description: meta.data.description,
     };
     setNft(nftRes);
+    setIsCreator(nftDetail.seller == account);
     setReload((prev) => !prev);
   };
 
@@ -72,6 +76,8 @@ const NFTDetail = () => {
       Auction.abi,
       provider.getSigner()
     );
+    const y = await provider.getSigner().getAddress();
+    console.log(y);
 
     const nftCont = new ethers.Contract(
       nftAddress,
@@ -79,7 +85,7 @@ const NFTDetail = () => {
       provider.getSigner()
     );
 
-    const owner = await nftCont.ownerOf(1);
+    const owner = await nftCont.ownerOf(id);
     console.log({ owner });
 
     const auctionDetail = await contract.getBidInfo(id);
@@ -147,18 +153,24 @@ const NFTDetail = () => {
   };
 
   const makeOffer = async (amt) => {
-    setLoading(true);
-    const web3modal = new web3Modal();
-    const conn = await web3modal.connect();
-    const provider = new ethers.providers.Web3Provider(conn);
-    const signer = provider.getSigner();
-    const biddingAmt = new ethers.utils.parseUnits(amt, "ether");
-    const contract = new ethers.Contract(auctionAddress, Auction.abi, signer);
-    const tx = await contract.bid(nft.marketId, { value: biddingAmt });
-    await tx.wait();
-    setLoading(false);
-    setOpenModal(false);
-    message.success("Bid successfully");
+    try {
+      setLoading(true);
+      const web3modal = new web3Modal();
+      const conn = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(conn);
+      const signer = provider.getSigner();
+      const biddingAmt = new ethers.utils.parseUnits(amt, "ether");
+      const contract = new ethers.Contract(auctionAddress, Auction.abi, signer);
+      const tx = await contract.bid(nft.marketId, { value: biddingAmt });
+      await tx.wait();
+      setLoading(false);
+      setOpenModal(false);
+      message.success("Bid successfully");
+    } catch (err) {
+      setOpenModal(false);
+      console.log("err", err.reason);
+      message.error(err.reason);
+    }
   };
 
   const columns = [
@@ -196,6 +208,10 @@ const NFTDetail = () => {
     setReload((prev) => !prev);
   };
 
+  useEffect(() => {
+    console.log({ auctionDetail });
+  });
+
   return (
     <PageLayout>
       <Modal
@@ -216,8 +232,8 @@ const NFTDetail = () => {
       </Modal>
       <div>
         <div className="content-header">
-          <h3 className="content-header-title">Cryptographics</h3>
-          {auctionDetail && !auctionDetail.started && (
+          <h3 className="content-header-title">Details</h3>
+          {isCreator && auctionDetail && !auctionDetail.started && (
             <button
               onClick={() => startOffer(0)}
               type="button"
@@ -227,15 +243,18 @@ const NFTDetail = () => {
             </button>
           )}
 
-          {auctionDetail && auctionDetail.started && !auctionDetail.ended && (
-            <button
-              onClick={() => endBid()}
-              type="button"
-              className="content-header-btn"
-            >
-              End Offer
-            </button>
-          )}
+          {isCreator &&
+            auctionDetail &&
+            auctionDetail.started &&
+            !auctionDetail.ended && (
+              <button
+                onClick={() => endBid()}
+                type="button"
+                className="content-header-btn"
+              >
+                End Offer
+              </button>
+            )}
         </div>
 
         <div className="content-main">
@@ -280,18 +299,21 @@ const NFTDetail = () => {
                   )}
                 </div>
               </div>
-              <div className="btn-section">
-                <button type="button" className="btn-buy">
-                  Buy
-                </button>
-                <button
-                  type="button"
-                  className="btn-offer"
-                  onClick={() => setOpenModal(true)}
-                >
-                  Make Offer
-                </button>
-              </div>
+              {!isCreator && (
+                <div className="btn-section">
+                  <button type="button" className="btn-buy">
+                    Buy
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-offer"
+                    onClick={() => setOpenModal(true)}
+                  >
+                    Make Offer
+                  </button>
+                </div>
+              )}
+
               <div className="bidder-section">
                 <h3 className="bidder-title">Bidders</h3>
 

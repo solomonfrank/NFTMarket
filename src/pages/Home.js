@@ -53,7 +53,7 @@ const Home = () => {
     <PageLayout>
       <div>
         <div className="content-header">
-          <h3 className="content-header-title">Cryptographics</h3>
+          <h3 className="content-header-title">NFT Listings</h3>
           <Link to="/create" className="content-header-btn">
             Create new Item
           </Link>

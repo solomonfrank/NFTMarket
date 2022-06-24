@@ -38,11 +38,8 @@ const NFtCard = ({ item, reload }) => {
       <div className="nft-footer">
         <div className="nft-upper">
           <h3 className="nft-upper-title">
-            <Link to={`/asset/${item.marketId}`}>{item.title}</Link>
+            <Link to={`/asset/${item.marketId}`}>{item.title} nininn</Link>
           </h3>
-          <span>
-            <AiFillStar color="#e2b93b" />
-          </span>
         </div>
         <div className="nft-upper">
           <h3 className="nft-upper-title">Price</h3>

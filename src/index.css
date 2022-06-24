@@ -387,3 +387,7 @@ body {
   resize: none;
   outline: none;
 }
+
+.nft-upper-title a {
+  color: #fff;
+}

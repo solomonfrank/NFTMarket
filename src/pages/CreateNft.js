@@ -7,6 +7,7 @@ import { message } from "antd";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import NFTMarket from "../artifacts/contracts/NFtMarket.sol/NftMarket.json";
 import { nftAddress, marketNftAddress } from "../config";
+import { web3ConnHandler } from "../utils/useContract";
 
 import PageLayout from "../layout";
 
@@ -49,8 +50,10 @@ const CreateNFT = () => {
       console.log({ fileResponse });
       const url = `https://ipfs.infura.io/ipfs/${fileResponse.path}`;
       setFileUrl(url);
+      message.success("File uploaded to IPFS");
     } catch (ex) {
       console.log({ error: ex });
+      message.error("Something went wrong");
     }
   };
 
@@ -82,57 +85,67 @@ const CreateNFT = () => {
   };
 
   const createSale = async (url) => {
-    const web3modal = new web3Modal();
-    const connection = await web3modal.connect();
+    try {
+      // const web3modal = new web3Modal();
+      // const connection = await web3modal.connect();
 
-    console.log({ connection });
+      // console.log({ connection });
 
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-    console.log({ signer });
-    let contract = new ethers.Contract(nftAddress, NFT.abi, signer);
+      // const provider = new ethers.providers.Web3Provider(connection);
+      // const signer = provider.getSigner();
+      // console.log({ signer });
+      // let contract = new ethers.Contract(nftAddress, NFT.abi, signer);
+      let [contract, signer] = await web3ConnHandler({
+        defaultConn: false,
+        contractAddress: nftAddress,
+        abi: NFT.abi,
+      });
+      console.log({ contract, url });
 
-    console.log({ contract, url });
+      let transaction = await contract.createToken(url);
+      console.log({ transaction });
+      const tx = await transaction.wait();
+      console.log({ tx });
+      const event = tx.events[0];
+      console.log({ event });
+      let value = event.args[2];
+      console.log({ value });
+      const tokenId = value.toNumber();
 
-    let transaction = await contract.createToken(url);
-    console.log({ transaction });
-    const tx = await transaction.wait();
-    console.log({ tx });
-    const event = tx.events[0];
-    console.log({ event });
-    let value = event.args[2];
-    console.log({ value });
-    const tokenId = value.toNumber();
+      contract = new ethers.Contract(marketNftAddress, NFTMarket.abi, signer);
 
-    contract = new ethers.Contract(marketNftAddress, NFTMarket.abi, signer);
+      const autionPrice = ethers.utils.parseUnits(price, "ether"); // convert to wei
+      let listingPrice = await contract.getListingPrice(); // return wei
+      console.log({ before: listingPrice, autionPrice });
+      listingPrice = listingPrice.toString();
+      console.log({ after: listingPrice, autionPrice });
+      transaction = await contract.createMarketItem(
+        nftAddress,
+        autionPrice,
+        tokenId,
+        {
+          value: listingPrice,
+        }
+      );
 
-    const autionPrice = ethers.utils.parseUnits(price, "ether"); // convert to wei
-    let listingPrice = await contract.getListingPrice(); // return wei
-    console.log({ before: listingPrice, autionPrice });
-    listingPrice = listingPrice.toString();
-    console.log({ after: listingPrice, autionPrice });
-    transaction = await contract.createMarketItem(
-      nftAddress,
-      autionPrice,
-      tokenId,
-      {
-        value: listingPrice,
-      }
-    );
-
-    await transaction.wait();
-    fetchTotalMint();
-    message.success("NFT created successfully");
-    setLoading(false);
+      await transaction.wait();
+      fetchTotalMint();
+      message.success("NFT created successfully");
+    } catch (err) {
+      console.log("create sale", err);
+      message.error(err?.message ?? "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <PageLayout>
       <div>
         <div className="content-header">
-          <h3 className="content-header-title">Create Nft</h3>
+          <h3 className="content-header-title">Create NFT</h3>
           <div style={{ color: "#fff", fontSize: "15px" }}>
-            Minted: {totalMint}
+            Minted: {totalMint || 0}
           </div>
         </div>
 
@@ -153,18 +166,6 @@ const CreateNFT = () => {
                 />
               </div>
               <div className="form-input-wrap">
-                <label for="description" className="form-input-label">
-                  Description
-                </label>
-                <input
-                  type="text"
-                  className="form-input"
-                  id="description"
-                  placeholder="Description"
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-              <div className="form-input-wrap">
                 <label for="title" className="form-input-label">
                   Price
                 </label>
@@ -176,6 +177,19 @@ const CreateNFT = () => {
                   onChange={(e) => setPrice(e.target.value)}
                 />
               </div>
+              <div className="form-input-wrap">
+                <label for="description" className="form-input-label">
+                  Description
+                </label>
+                <textarea
+                  className="form-input"
+                  id="description"
+                  placeholder="Description"
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={5}
+                />
+              </div>
+
               <div className="form-input-wrap">
                 <label for="title" className="form-input-label">
                   Photo
