@@ -13,6 +13,7 @@ contract MyDao {
     using Counters for Counters.Counter;
 
     Counters.Counter private proposalId;
+    Counters.Counter private countedVoteId;
 
     address public owner;
     uint256[] public vaidToken;
@@ -31,12 +32,13 @@ contract MyDao {
         string description;
         bool exists;
         bool countConducted;
-        // mapping(address => bool) voteStatus;
         VotedAddress[] canVote;
+        address owner;
         bool passed;
     }
 
     mapping(uint256 => Proposal) public proposals;
+    mapping(uint256 => uint256) public countConductedIds;
     mapping(uint256 => mapping(address => bool)) public voteStatus;
     mapping(uint256 => mapping(uint256 => bool)) public votedNftId;
 
@@ -59,6 +61,9 @@ contract MyDao {
     event ProposalCount(uint256 id, bool passed);
 
     modifier nftHolder(address nftAddress) {
+        console.log("nftAddress", nftAddress);
+        uint256 amount = NFT(nftAddress).balanceOf(msg.sender);
+        console.log("amount", amount);
         require(NFT(nftAddress).balanceOf(msg.sender) > 0, "Not Nft holder");
         _;
     }
@@ -135,6 +140,7 @@ contract MyDao {
         newProposal.description = _description;
         newProposal.deadline = block.timestamp + 10 minutes;
         newProposal.exists = true;
+        newProposal.owner = msg.sender;
         newProposal.id = itemId;
 
         emit ProposalCreated(
@@ -176,9 +182,12 @@ contract MyDao {
         emit NewVote(p.voteUp, p.voteDown, _vote, id, msg.sender);
     }
 
-    function countVotes(uint256 id) public {
+    function countVotes(uint256 id, address nftAddress)
+        public
+        nftHolder(nftAddress)
+    {
         Proposal storage p = proposals[id];
-        require(msg.sender == owner, "Only owner can count the  vote");
+        require(p.owner == msg.sender, "Only can count vote.");
         require(block.timestamp > p.deadline, "Proposal has not ended");
         require(!p.countConducted, "Count has already been done");
 
@@ -187,6 +196,9 @@ contract MyDao {
         }
 
         p.countConducted = true;
+        countedVoteId.increment();
+        uint256 countId = countedVoteId.current();
+        countConductedIds[id] = countId;
 
         emit ProposalCount(id, p.countConducted);
     }
@@ -214,5 +226,30 @@ contract MyDao {
         returns (Proposal memory)
     {
         return proposals[id];
+    }
+
+    function fetchOngoingProposals() public view returns (Proposal[] memory) {
+        uint256 proposalCount = proposalId.current();
+        uint256 countConducted = countedVoteId.current();
+
+        uint256 notCountConducted = proposalCount - countConducted;
+        uint256 currenrIdx = 0;
+        Proposal[] memory proposalUnConductd = new Proposal[](
+            notCountConducted
+        );
+
+        for (uint256 i; i < proposalCount; ) {
+            Proposal memory p = proposals[i + 1];
+
+            if (p.countConducted == false) {
+                proposalUnConductd[currenrIdx] = p;
+            }
+
+            unchecked {
+                i++;
+                currenrIdx++;
+            }
+        }
+        return proposalUnConductd;
     }
 }

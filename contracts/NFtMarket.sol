@@ -131,18 +131,25 @@ contract NftMarket is ReentrancyGuard {
         uint256 itemCount;
         uint256 currentIdx = 0;
 
-        for (uint256 i = 0; i < totalItemCount; i++) {
+        for (uint256 i = 0; i < totalItemCount; ) {
             if (idToMarketItem[i + 1].onwer == msg.sender) {
                 itemCount += 1;
             }
+            unchecked {
+                i++;
+            }
         }
         MarketItem[] memory items = new MarketItem[](itemCount);
-        for (uint256 i = 0; i < itemCount; i++) {
+        for (uint256 i = 0; i < totalItemCount; ) {
             if (idToMarketItem[i + 1].onwer == msg.sender) {
-                uint256 currentId = idToMarketItem[i + 1].itemId;
-                MarketItem storage currentItem = idToMarketItem[currentId];
+                //  uint256 currentId = idToMarketItem[i + 1].itemId;
+                MarketItem memory currentItem = idToMarketItem[i + 1];
                 items[currentIdx] = currentItem;
                 currentIdx += 1;
+            }
+
+            unchecked {
+                i++;
             }
         }
 
@@ -151,21 +158,30 @@ contract NftMarket is ReentrancyGuard {
 
     function fetchitemcreated() public view returns (MarketItem[] memory) {
         uint256 totalItemCount = _itemId.current();
+
         uint256 itemCount;
         uint256 currentIdx = 0;
 
-        for (uint256 i = 0; i < totalItemCount; i++) {
+        for (uint256 i = 0; i < totalItemCount; ) {
             if (idToMarketItem[i + 1].seller == msg.sender) {
                 itemCount += 1;
             }
+            unchecked {
+                i++;
+            }
         }
+        console.log("fetchitemcreated", totalItemCount, itemCount, msg.sender);
         MarketItem[] memory items = new MarketItem[](itemCount);
-        for (uint256 i = 0; i < itemCount; i++) {
+        for (uint256 i = 0; i < totalItemCount; ) {
             if (idToMarketItem[i + 1].seller == msg.sender) {
-                uint256 currentId = idToMarketItem[i + 1].itemId;
-                MarketItem storage currentItem = idToMarketItem[currentId];
+                // uint256 currentId = idToMarketItem[i + 1]
+                MarketItem memory currentItem = idToMarketItem[i + 1];
                 items[currentIdx] = currentItem;
                 currentIdx += 1;
+            }
+
+            unchecked {
+                i++;
             }
         }
 

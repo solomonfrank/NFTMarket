@@ -205,12 +205,4 @@ contract Auction is ReentrancyGuard {
     function getBidInfo(uint256 id) external view returns (Bidinfo memory) {
         return marketItemInfo[id];
     }
-
-    // function getHighestBidder() public view returns (address) {
-    //     return highestBidder;
-    // }
-
-    // function getHighestBid() public view returns (uint256) {
-    //     return highestBid;
-    // }
 }

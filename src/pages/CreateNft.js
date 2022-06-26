@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { create } from "ipfs-http-client";
 import web3Modal from "web3modal";
 import { ethers } from "ethers";
@@ -21,10 +21,8 @@ const CreateNFT = () => {
   const [description, setDescription] = useState();
   const [title, setTitle] = useState();
   const [price, setPrice] = useState();
-  const [tokenUrl, setTokenUrl] = useState();
-  const [nftItems, setNftItems] = useState([]);
-  const [collapsed, setCollapsed] = useState(false);
   const [totalMint, setTotalmint] = useState();
+  const inputRef = useRef();
 
   const fetchTotalMint = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -109,9 +107,9 @@ const CreateNFT = () => {
       const event = tx.events[0];
       console.log({ event });
       let value = event.args[2];
-      console.log({ value });
-      const tokenId = value.toNumber();
 
+      const tokenId = value.toNumber();
+      console.log({ value, tokenId });
       contract = new ethers.Contract(marketNftAddress, NFTMarket.abi, signer);
 
       const autionPrice = ethers.utils.parseUnits(price, "ether"); // convert to wei
@@ -129,7 +127,11 @@ const CreateNFT = () => {
       );
 
       await transaction.wait();
+      setDescription("");
+      setTitle("");
+      setPrice("");
       fetchTotalMint();
+      inputRef.current.value = null;
       message.success("NFT created successfully");
     } catch (err) {
       console.log("create sale", err);
@@ -159,6 +161,7 @@ const CreateNFT = () => {
                 </label>
                 <input
                   type="text"
+                  value={title}
                   className="form-input"
                   id="title"
                   placeholder="Title"
@@ -173,6 +176,7 @@ const CreateNFT = () => {
                   type="text"
                   className="form-input"
                   id="price"
+                  value={price}
                   placeholder="price"
                   onChange={(e) => setPrice(e.target.value)}
                 />
@@ -184,6 +188,7 @@ const CreateNFT = () => {
                 <textarea
                   className="form-input"
                   id="description"
+                  value={description}
                   placeholder="Description"
                   onChange={(e) => setDescription(e.target.value)}
                   rows={5}
@@ -198,7 +203,7 @@ const CreateNFT = () => {
                   type="file"
                   className="form-input"
                   id="price"
-                  placeholder="price"
+                  ref={inputRef}
                   onChange={onChange}
                 />
               </div>

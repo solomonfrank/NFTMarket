@@ -122,54 +122,69 @@ const NFTDetail = () => {
   }, [id, reload]);
 
   const startOffer = async (bid) => {
-    const web3modal = new web3Modal();
-    const conn = await web3modal.connect();
-    const provider = new ethers.providers.Web3Provider(conn);
-    const signer = provider.getSigner();
-    console.log({ signer });
-    const contract = new ethers.Contract(auctionAddress, Auction.abi, signer);
-    const marketNftContract = new ethers.Contract(
-      marketNftAddress,
-      NFTMarket.abi,
-      signer
-    );
-
-    const tx = await marketNftContract.approveAuction(
-      nftAddress,
-      auctionAddress
-    );
-    await tx.wait();
-    const response = await contract.startBid(
-      nftAddress,
-      nft.tokenId,
-      bid,
-      marketNftAddress,
-      nft.marketId
-    );
-    await response.wait();
-    console.log({ response: nft.tokenId, mket: nft.marketId });
-    getAuctionInfo(id);
-    //  setReload((prev) => !prev);
-  };
-
-  const makeOffer = async (amt) => {
     try {
-      setLoading(true);
       const web3modal = new web3Modal();
       const conn = await web3modal.connect();
       const provider = new ethers.providers.Web3Provider(conn);
       const signer = provider.getSigner();
-      const biddingAmt = new ethers.utils.parseUnits(amt, "ether");
+      console.log({ signer });
       const contract = new ethers.Contract(auctionAddress, Auction.abi, signer);
-      const tx = await contract.bid(nft.marketId, { value: biddingAmt });
+      const marketNftContract = new ethers.Contract(
+        marketNftAddress,
+        NFTMarket.abi,
+        signer
+      );
+
+      const tx = await marketNftContract.approveAuction(
+        nftAddress,
+        auctionAddress
+      );
       await tx.wait();
-      setLoading(false);
-      setOpenModal(false);
-      message.success("Bid successfully");
-    } catch (err) {
-      setOpenModal(false);
-      console.log("err", err.reason);
-      message.error(err.reason);
+      const response = await contract.startBid(
+        nftAddress,
+        nft.tokenId,
+        bid,
+        marketNftAddress,
+        nft.marketId
+      );
+      await response.wait();
+      message.success("Bid started");
+      console.log({ response: nft.tokenId, mket: nft.marketId });
+      getAuctionInfo(id);
+    } catch (ex) {
+      console.log(ex);
+      message.err(ex.reason);
+    }
+  };
+
+  const makeOffer = async (amt) => {
+    if (auctionDetail.started) {
+      try {
+        setLoading(true);
+        const web3modal = new web3Modal();
+        const conn = await web3modal.connect();
+        const provider = new ethers.providers.Web3Provider(conn);
+        const signer = provider.getSigner();
+        const biddingAmt = new ethers.utils.parseUnits(amt, "ether");
+        const contract = new ethers.Contract(
+          auctionAddress,
+          Auction.abi,
+          signer
+        );
+        const tx = await contract.bid(nft.marketId, { value: biddingAmt });
+        await tx.wait();
+        setLoading(false);
+        setOpenModal(false);
+        message.success("Bid successfully");
+      } catch (err) {
+        setLoading(false);
+        setOpenModal(false);
+        console.log(err);
+        console.log("err", err.message);
+        message.error(err.reason);
+      }
+    } else {
+      message.error("Bid has not started");
     }
   };
 
@@ -211,6 +226,37 @@ const NFTDetail = () => {
   useEffect(() => {
     console.log({ auctionDetail });
   });
+
+  const buyNft = async () => {
+    if (auctionDetail.started) {
+      const hide = message.loading("Loading..", 0);
+      try {
+        const web3modal = new web3Modal();
+        const conn = await web3modal.connect();
+        const provider = new ethers.providers.Web3Provider(conn);
+        const signer = provider.getSigner();
+        const price = new ethers.utils.parseUnits(nft.price, "ether");
+        const contract = new ethers.Contract(
+          marketNftAddress,
+          NFTMarket.abi,
+          signer
+        );
+        const tx = await contract.createmarketSale(nft.marketId, nftAddress, {
+          value: price,
+        });
+        await tx.wait();
+        setTimeout(hide, 0);
+        message.success("Successfully");
+      } catch (err) {
+        setTimeout(hide, 0);
+        console.log(err);
+
+        message.error(err.reason);
+      }
+    } else {
+      message.error("Bid has not started");
+    }
+  };
 
   return (
     <PageLayout>
@@ -301,7 +347,7 @@ const NFTDetail = () => {
               </div>
               {!isCreator && (
                 <div className="btn-section">
-                  <button type="button" className="btn-buy">
+                  <button onClick={buyNft} type="button" className="btn-buy">
                     Buy
                   </button>
                   <button
@@ -316,17 +362,12 @@ const NFTDetail = () => {
 
               <div className="bidder-section">
                 <h3 className="bidder-title">Bidders</h3>
-
-                {auctionDetail && auctionDetail.started && (
-                  <div>
-                    <Table
-                      columns={columns}
-                      dataSource={bidders}
-                      pagination={false}
-                      bordered={true}
-                    />
-                  </div>
-                )}
+                <Table
+                  columns={columns}
+                  dataSource={bidders}
+                  pagination={false}
+                  bordered={true}
+                />
               </div>
             </div>
           </div>

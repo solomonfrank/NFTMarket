@@ -22,33 +22,47 @@ const Proposal = () => {
   const [voterStatus, setVoterStatus] = useState([]);
 
   const [votedValue, setVotedValue] = useState(1);
+
   const voteProposal = async (vote) => {
-    const web3modal = new web3Modal();
-    const conn = await web3modal.connect();
-    const provider = new ethers.providers.Web3Provider(conn);
+    try {
+      const web3modal = new web3Modal();
+      const conn = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(conn);
 
-    const signer = provider.getSigner();
-    console.log({ signer });
+      const signer = provider.getSigner();
+      console.log({ signer });
 
-    let contract = new ethers.Contract(daoAddress, DAO.abi, signer);
-    const tx = await contract.voteProposal(location.state.id, vote, nftAddress);
-    await tx.wait();
-    setReload((prev) => !prev);
-    console.log({ tx });
+      let contract = new ethers.Contract(daoAddress, DAO.abi, signer);
+      const tx = await contract.voteProposal(
+        location.state.id,
+        vote,
+        nftAddress
+      );
+      await tx.wait();
+      setReload((prev) => !prev);
+      console.log({ tx });
+    } catch (ex) {
+      message.error(ex.message);
+    }
   };
 
   const countVoteHandler = async () => {
-    const web3modal = new web3Modal();
-    const conn = await web3modal.connect();
-    const provider = new ethers.providers.Web3Provider(conn);
+    try {
+      const web3modal = new web3Modal();
+      const conn = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(conn);
 
-    const signer = provider.getSigner();
-    console.log({ signer });
+      const signer = provider.getSigner();
+      console.log({ signer });
 
-    let contract = new ethers.Contract(daoAddress, DAO.abi, signer);
-    const tx = await contract.countVotes(location.state.id);
-    await tx.wait();
-    alert("Vote counted");
+      let contract = new ethers.Contract(daoAddress, DAO.abi, signer);
+      const tx = await contract.countVotes(location.state.id, nftAddress);
+      await tx.wait();
+      alert("Vote counted");
+    } catch (ex) {
+      console.log(ex);
+      message.error("You are not the creator.");
+    }
   };
 
   const onChange = (e) => {
@@ -79,6 +93,7 @@ const Proposal = () => {
       return {
         address: item.voter,
         status: item.status,
+        owner: item.owner,
         id: idx + 1,
       };
     });
@@ -89,9 +104,25 @@ const Proposal = () => {
       voteAgainst: result.voteDown.toString(),
       description: result.description,
       passed: result.passed,
+      owner: result.owner,
+      countConducted: result.countConducted,
+      deadline: result.deadline.toString(),
     };
+
+    console.log({ response });
     setproposal(response);
     setVoterStatus(voters);
+  };
+
+  const expired = (proposal) => {
+    const currentTime = Date.now() / 1000;
+    const proposalTime = proposal.deadline;
+    console.log({ proposalTime, currentTime });
+    if (proposalTime > currentTime) {
+      return false;
+    }
+
+    return true;
   };
 
   useEffect(() => {
@@ -128,7 +159,7 @@ const Proposal = () => {
         <div className="content-header">
           <h3 className="content-header-title">overview</h3>
 
-          {proposal && proposal.countConducted && (
+          {proposal && !proposal.countConducted && (
             <button onClick={countVoteHandler} className="content-header-btn">
               Count Vote
             </button>
@@ -139,15 +170,20 @@ const Proposal = () => {
           <div className="mainContainer">
             <div className="proposer-title">{proposal?.description}</div>
             <div className="propsConts">
-              <Tag
-                color={proposal && proposal.passed ? "green" : "red"}
-                text={proposal && proposal.passed ? "Passed" : "Rejected"}
-                fontSize="14px"
-              />
+              {proposal && !proposal.countConducted ? (
+                <Tag color="blue" text="Ongoing" fontSize="14px" />
+              ) : (
+                <Tag
+                  color={proposal && proposal.passed ? "green" : "red"}
+                  text={proposal && proposal.passed ? "Passed" : "Rejected"}
+                  fontSize="14px"
+                />
+              )}
+
               <div className="proposer">
                 <span className="proposerBY">Proposer By</span>
-                <Tooltip content="0x">
-                  <Blockie seed="0x" />
+                <Tooltip content={proposal?.owner}>
+                  <Blockie seed={proposal?.owner} />
                 </Tooltip>
               </div>
             </div>

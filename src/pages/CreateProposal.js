@@ -3,7 +3,7 @@ import { create } from "ipfs-http-client";
 import web3Modal from "web3modal";
 import { Link } from "react-router-dom";
 import { ethers } from "ethers";
-import { Layout, Table, Tag } from "antd";
+import { Layout, message, Table, Tag } from "antd";
 
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import NFTMarket from "../artifacts/contracts/NFtMarket.sol/NftMarket.json";
@@ -22,6 +22,9 @@ const CreateProposal = () => {
   const [reloadProposal, setReloadProposal] = useState(false);
   const [proposals, setProposal] = useState([]);
   const [proposalCount, setProposalCount] = useState();
+  const [tokenBalance, setTokenBalance] = useState(0);
+  const [ongoingProposal, setOngoingProposal] = useState(0);
+  const [totalMint, setTotalmint] = useState();
 
   const createProposal = async (data) => {
     try {
@@ -37,12 +40,36 @@ const CreateProposal = () => {
       console.log({ tx });
     } catch (err) {
       console.log(err.toString());
+      message.error(err.message);
     }
+  };
+
+  const fetchTotalMint = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(
+      nftAddress,
+      NFT.abi,
+      provider.getSigner()
+    );
+    const totalSupply = await contract.totalSupply();
+    setTotalmint(totalSupply.toString());
+    console.log({ totalSupply: totalSupply.toString() });
   };
 
   const submitProposal = async (e) => {
     e.preventDefault();
     await createProposal(proposalDescription);
+  };
+
+  const expired = (proposal) => {
+    const currentTime = Date.now() / 1000;
+    const proposalTime = proposal.deadline;
+    console.log({ proposalTime, currentTime });
+    if (proposalTime > currentTime) {
+      return false;
+    }
+
+    return true;
   };
 
   const loadProposal = async () => {
@@ -59,7 +86,12 @@ const CreateProposal = () => {
       description: item.description,
       status: item.passed,
       action: item.id.toString(),
+      countConducted: item.countConducted,
+      deadline: item.deadline.toString(),
     }));
+
+    const ungoingProposal = result.filter((item) => !expired(item));
+    setOngoingProposal(ungoingProposal.length);
     setProposalCount(result.length);
     setProposal(result);
     console.log({ result });
@@ -103,6 +135,27 @@ const CreateProposal = () => {
     },
   ];
 
+  const fetchTokenBalance = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(
+      nftAddress,
+      NFT.abi,
+      provider.getSigner()
+    );
+
+    const account = await provider.getSigner().getAddress();
+    const totalSupply = await contract.balanceOf(account);
+    const owner = await contract.ownerOf(1);
+    setTokenBalance(totalSupply.toString());
+    //setTotalmint(totalSupply.toString());
+    console.log({ totalSupply: totalSupply.toString(), owner });
+  };
+
+  useEffect(() => {
+    fetchTokenBalance();
+    fetchTotalMint();
+  }, []);
+
   return (
     <PageLayout>
       <div>
@@ -128,29 +181,26 @@ const CreateProposal = () => {
               </div>
             </div>
           </Widget>
-          <Widget style={{ width: "25%" }} info={422} title="Eligible voters" />
-          <Widget style={{ width: "25%" }} info={4} title="Ongoing Proposal" />
+          <Widget
+            style={{ width: "25%" }}
+            info={totalMint}
+            title="Eligible voters"
+          />
+          <Widget
+            style={{ width: "25%" }}
+            info={ongoingProposal}
+            title="Ongoing Proposal"
+          />
         </div>
         <div className="content-main-crete">
           <div style={{ marginTop: "30px", width: "80%" }}>
-            <Table columns={columns} dataSource={proposals} />
+            <Table
+              columns={columns}
+              dataSource={proposals}
+              pagination={false}
+            />
           </div>
 
-          <Layout style={{ marginTop: "30px", width: "80%" }}>
-            <h4 className="create-proposal-header">Create Proposal</h4>
-            <form onSubmit={submitProposal}>
-              <div className="proposal-wrap">
-                <textarea
-                  className="proposal-text"
-                  rows={6}
-                  onChange={(e) => setProposalDescription(e.target.value)}
-                />
-                <button className="proposal-btn" type="submit">
-                  Submit
-                </button>
-              </div>
-            </form>
-          </Layout>
           <Layout style={{ marginTop: "30px", width: "80%" }}>
             <h4 className="create-proposal-header">Create Proposal</h4>
             <form onSubmit={submitProposal}>

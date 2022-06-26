@@ -45,6 +45,8 @@ const MyNFT = () => {
         };
       })
     );
+
+    console.log({ nftItems });
     setNftItems(nftItems);
     console.log({ nftItems });
   };
@@ -56,7 +58,7 @@ const MyNFT = () => {
     <PageLayout>
       <div>
         <div className="content-header">
-          <h3 className="content-header-title">Cryptographics</h3>
+          <h3 className="content-header-title">Listings</h3>
           <Link to="/create" className="content-header-btn">
             Create new Item
           </Link>

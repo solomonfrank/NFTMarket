@@ -39,9 +39,9 @@ const CreatorNFT = () => {
           tokenUrl,
           marketId: item.itemId.toString(),
           tokenId: item.tokenId.toString(),
-          title: meta.data.title,
-          image: meta.data.image,
-          description: meta.data.description,
+          title: meta?.data?.title,
+          image: meta?.data?.image,
+          description: meta?.data?.description,
         };
       })
     );
@@ -56,7 +56,7 @@ const CreatorNFT = () => {
     <PageLayout>
       <div>
         <div className="content-header">
-          <h3 className="content-header-title">Cryptographics</h3>
+          <h3 className="content-header-title">Listings</h3>
           <Link to="/create" className="content-header-btn">
             Create new Item
           </Link>
